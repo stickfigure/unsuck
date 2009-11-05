@@ -30,7 +30,7 @@ public class DecoderRing
 	}
 	
 	/** */
-	public void addMethod(String name)
+	public void setMethod(String name)
 	{
 		this.params.put("_method", name);
 	}
