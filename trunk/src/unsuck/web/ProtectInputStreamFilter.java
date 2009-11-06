@@ -55,7 +55,6 @@ import unsuck.io.BetterByteArrayOutputStream;
 public class ProtectInputStreamFilter extends AbstractFilter
 {
 	/** */
-	@SuppressWarnings("unused")
 	private final static Logger log = LoggerFactory.getLogger(ProtectInputStreamFilter.class);
 	
 	/** */
@@ -148,6 +147,9 @@ public class ProtectInputStreamFilter extends AbstractFilter
 			{
 				this.body = new BetterByteArrayOutputStream();
 				IOUtils.copy(super.getInputStream(), this.body);
+				
+				if (log.isDebugEnabled())
+					log.debug("Read input stream: " + new String(this.body.toByteArray(), "utf-8"));
 			}
 			
 			return new ServletInputStreamWrapper(this.body.getInputStream());
