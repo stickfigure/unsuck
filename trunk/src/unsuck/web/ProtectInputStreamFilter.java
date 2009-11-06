@@ -29,6 +29,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import unsuck.io.BetterByteArrayOutputStream;
+
 /**
  * <p>One of the fucked up things about the servlet API is that, on POST, you can
  * pretty much access *either* request.getParameter() *or* request.getInputStream().
@@ -57,6 +59,71 @@ public class ProtectInputStreamFilter extends AbstractFilter
 	private final static Logger log = LoggerFactory.getLogger(ProtectInputStreamFilter.class);
 	
 	/** */
+	protected static class ServletInputStreamWrapper extends ServletInputStream
+	{
+		InputStream base;
+		
+		public ServletInputStreamWrapper(InputStream base)
+		{
+			this.base = base;
+		}
+
+		@Override
+		public int read() throws IOException
+		{
+			return this.base.read();
+		}
+
+		@Override
+		public int available() throws IOException
+		{
+			return this.base.available();
+		}
+
+		@Override
+		public void close() throws IOException
+		{
+			this.base.close();
+		}
+
+		@Override
+		public synchronized void mark(int readlimit)
+		{
+			this.base.mark(readlimit);
+		}
+
+		@Override
+		public boolean markSupported()
+		{
+			return this.base.markSupported();
+		}
+
+		@Override
+		public int read(byte[] b, int off, int len) throws IOException
+		{
+			return this.base.read(b, off, len);
+		}
+
+		@Override
+		public int read(byte[] b) throws IOException
+		{
+			return this.base.read(b);
+		}
+
+		@Override
+		public void reset() throws IOException
+		{
+			this.base.reset();
+		}
+
+		@Override
+		public long skip(long n) throws IOException
+		{
+			return this.base.skip(n);
+		}	
+	}
+	
+	/** */
 	protected static class BufferingRequest extends HttpServletRequestWrapper
 	{
 		/** Call getParams() to lazy-populate this */
@@ -64,6 +131,9 @@ public class ProtectInputStreamFilter extends AbstractFilter
 		
 		/** This is lazily converted from params */
 		private Map<String, String[]> parameterMap;
+		
+		/** Holds the body for getInputStream() */
+		BetterByteArrayOutputStream body;
 		
 		/** */
 		public BufferingRequest(HttpServletRequest request)
@@ -74,7 +144,13 @@ public class ProtectInputStreamFilter extends AbstractFilter
 		@Override
 		public ServletInputStream getInputStream() throws IOException
 		{
-			return super.getInputStream();
+			if (this.body == null)
+			{
+				this.body = new BetterByteArrayOutputStream();
+				IOUtils.copy(super.getInputStream(), this.body);
+			}
+			
+			return new ServletInputStreamWrapper(this.body.getInputStream());
 		}
 
 		@Override
