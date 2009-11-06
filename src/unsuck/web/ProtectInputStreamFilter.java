@@ -212,8 +212,12 @@ public class ProtectInputStreamFilter extends AbstractFilter
 					int numChars = IOUtils.copy(new InputStreamReader(in, "utf-8"), bld);
 					
 					// One thing to watch out for, put the query string in here
-					if (numChars > 0) bld.write('&');
-					bld.write(this.getQueryString());
+					String origQueryString = this.getQueryString();
+					if (origQueryString != null)
+					{
+						if (numChars > 0) bld.write('&');
+						bld.write(this.getQueryString());
+					}
 				}
 				catch (IOException e)
 				{
