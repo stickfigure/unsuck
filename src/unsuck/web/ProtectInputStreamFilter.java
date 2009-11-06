@@ -202,6 +202,8 @@ public class ProtectInputStreamFilter extends AbstractFilter
 		{
 			if (this.params == null)
 			{
+				this.params = new HashMap<String, List<String>>();
+				
 				StringWriter bld = new StringWriter();
 				
 				try
