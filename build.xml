@@ -109,4 +109,10 @@
 			<classfileset dir="${build.classes.dir}" includes="**/test/*.class"/>
 		</testng>
 	</target>
+	
+	<target name="deploy" depends="jar">
+		<copy file="${build.jar.file}" todir="../Mobcasting/war/WEB-INF/lib" />
+		<copy file="${build.jar.file}" todir="../Pushproxy/lib" />
+	</target>
+	
 </project>
