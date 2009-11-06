@@ -5,6 +5,7 @@
 package unsuck.web;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -48,6 +49,18 @@ public class URLUtils
 		try
 		{
 			return URLEncoder.encode(value.toString(), "utf-8");
+		}
+		catch (UnsupportedEncodingException e) { throw new RuntimeException(e); }
+	}
+	
+	/**
+	 * An interface to URLDecoder.decode() that isn't inane
+	 */
+	public static String urlDecode(Object value)
+	{
+		try
+		{
+			return URLDecoder.decode(value.toString(), "utf-8");
 		}
 		catch (UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	}
