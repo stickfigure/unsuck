@@ -9,7 +9,7 @@ public class ThreadUtils
 	/**
 	 * Thread.sleep that doesn't throw a fucking checked exception
 	 */
-	public void sleep(long millis)
+	public static void sleep(long millis)
 	{
 		try
 		{
