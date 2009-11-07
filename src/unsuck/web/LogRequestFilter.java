@@ -18,14 +18,14 @@ import unsuck.web.AbstractFilter;
 
 
 /**
- * Filer that logs all http requests as debug.
+ * Filter that logs all http requests as debug.
  * 
  * @author Jeff Schnitzer
  */
-public class LogRequestsFilter extends AbstractFilter
+public class LogRequestFilter extends AbstractFilter
 {
 	/** */
-	private final static Logger log = LoggerFactory.getLogger(LogRequestsFilter.class);
+	private final static Logger log = LoggerFactory.getLogger(LogRequestFilter.class);
 
 	/** */
 	@Override
