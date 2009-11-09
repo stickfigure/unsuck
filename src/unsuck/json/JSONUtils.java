@@ -4,6 +4,8 @@
 
 package unsuck.json;
 
+import java.io.StringWriter;
+
 import org.codehaus.jackson.map.ObjectMapper;
 
 
@@ -22,7 +24,16 @@ public class JSONUtils
 		ObjectMapper mapper = new ObjectMapper();
 		try
 		{
-			return mapper.writeValueAsString(value);
+			StringWriter writer = new StringWriter();
+			
+			mapper.writeValue(writer, value);
+			
+			return writer.toString();
+			
+			// This requires Jackson 1.3 which breaks GAE.
+			// TODO, replace with this code when bug is fixed:
+			// http://jira.codehaus.org/browse/JACKSON-188
+			//return mapper.writeValueAsString(value);
 		}
 		catch (RuntimeException ex) { throw ex; }
 		catch (Exception ex) { throw new RuntimeException(ex); }
