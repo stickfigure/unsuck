@@ -4,8 +4,6 @@
 
 package unsuck.json;
 
-import java.io.StringWriter;
-
 import org.codehaus.jackson.map.ObjectMapper;
 
 
@@ -21,16 +19,26 @@ public class JSONUtils
 	 */
 	public static String toJSON(Object value)
 	{
-		StringWriter json = new StringWriter();
-		
 		ObjectMapper mapper = new ObjectMapper();
 		try
 		{
-			mapper.writeValue(json, value);
+			return mapper.writeValueAsString(value);
 		}
 		catch (RuntimeException ex) { throw ex; }
 		catch (Exception ex) { throw new RuntimeException(ex); }
-		
-		return json.toString();
+	}
+	
+	/**
+	 * Converts the JSON string to an Object (either Map or List)
+	 */
+	public static Object fromJSON(String value)
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		try
+		{
+			return mapper.readValue(value, Object.class);
+		}
+		catch (RuntimeException ex) { throw ex; }
+		catch (Exception ex) { throw new RuntimeException(ex); }
 	}
 }
