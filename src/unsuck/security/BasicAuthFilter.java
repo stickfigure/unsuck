@@ -58,6 +58,9 @@ abstract public class BasicAuthFilter extends AbstractFilter
 
 			String header = "Basic " + Base64.encodeBase64String(bytes);
 			conn.setRequestProperty("Authorization", header);
+			
+			if (log.isDebugEnabled())
+				log.debug("Authorization header is: " + header);
 		}
 		catch (UnsupportedEncodingException ex) { throw new RuntimeException(ex); }
 	}
@@ -90,8 +93,14 @@ abstract public class BasicAuthFilter extends AbstractFilter
 			}
 			else
 			{
-				log.warn("Failed auth attempt for: " + authParts[0]);
+				if (log.isWarnEnabled())
+					log.warn("Failed auth attempt for: " + authParts[0]);
 			}
+		}
+		else
+		{
+			if (log.isWarnEnabled())
+				log.warn("Bad authorization header: " + authorization);
 		}
 
 		// return auth required

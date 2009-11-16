@@ -5,6 +5,7 @@
 package unsuck.web;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import unsuck.web.AbstractFilter;
 
 
 /**
@@ -29,6 +28,7 @@ public class LogRequestFilter extends AbstractFilter
 
 	/** */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		if (log.isDebugEnabled())
@@ -43,6 +43,18 @@ public class LogRequestFilter extends AbstractFilter
 			}
 			
 			log.debug(url.toString());
+			
+			Enumeration<String> nameEnu = request.getHeaderNames();
+			while (nameEnu.hasMoreElements())
+			{
+				String name = nameEnu.nextElement();
+				Enumeration<String> valuesEnu = request.getHeaders(name);
+				while (valuesEnu.hasMoreElements())
+				{
+					String value = valuesEnu.nextElement();
+					log.debug("    " + name + ": " + value);
+				}
+			}
 		}
 		
 		chain.doFilter(request, response);
