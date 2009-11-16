@@ -56,7 +56,8 @@ abstract public class BasicAuthFilter extends AbstractFilter
 			// There is no standard for charset, might as well use utf-8
 			byte[] bytes = buf.toString().getBytes("utf-8");
 
-			String header = "Basic " + Base64.encodeBase64String(bytes);
+			// Watch out, Base64.encodeBase64String puts a fatal CRLF at the end
+			String header = "Basic " + new String(Base64.encodeBase64(bytes), "utf-8");	// really ascii
 			conn.setRequestProperty("Authorization", header);
 			
 			if (log.isDebugEnabled())
