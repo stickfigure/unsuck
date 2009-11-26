@@ -111,8 +111,8 @@
 	</target>
 	
 	<target name="deploy" depends="jar">
-		<copy file="${build.jar.file}" todir="../Mobcasting/war/WEB-INF/lib" />
-		<copy file="${build.jar.file}" todir="../Pushproxy/lib" />
+		<copy file="${build.jar.file}" todir="../Mobcasting/server/war/WEB-INF/lib" />
+		<copy file="${build.jar.file}" todir="../Mobcasting/pushproxy/lib" />
 	</target>
 	
 </project>
