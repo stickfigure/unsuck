@@ -42,9 +42,9 @@ import unsuck.io.BetterByteArrayOutputStream;
  * the value in memory.  Don't use this filter when there might be very large
  * POST values.</p>
  * 
- * <p>This filter only works when the method is POST and the content type is
- * application/x-www-form-urlencoded.  Otherwise it just passes the request
- * through unmolested.</p>
+ * <p>This filter only works when the content type is application/x-www-form-urlencoded.
+ * Otherwise it just passes the request through unmolested.  It doesn't check explicitly
+ * for POST method.</p>
  * 
  * <p>Also, this filter currently only buffers getInputStream(), not getReader().</p>
  * 
@@ -257,8 +257,7 @@ public class ProtectInputStreamFilter extends AbstractFilter
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 		throws IOException, ServletException
 	{
-		if (request.getMethod().toUpperCase().equals("POST")
-				&& (request.getContentType().equals("application/x-www-form-urlencoded")))
+		if ("application/x-www-form-urlencoded".equals(request.getContentType()))
 			chain.doFilter(new BufferingRequest(request), response);
 		else
 			chain.doFilter(request, response);
