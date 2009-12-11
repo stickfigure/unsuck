@@ -44,10 +44,18 @@ public class JSONUtils
 	 */
 	public static Object fromJSON(String value)
 	{
+		return fromJSON(value, Object.class);
+	}
+	
+	/**
+	 * Converts the JSON string to a typed object (or Map/List if Object.class is passed in)
+	 */
+	public static <T> T fromJSON(String value, Class<T> type)
+	{
 		ObjectMapper mapper = new ObjectMapper();
 		try
 		{
-			return mapper.readValue(value, Object.class);
+			return mapper.readValue(value, type);
 		}
 		catch (RuntimeException ex) { throw ex; }
 		catch (Exception ex) { throw new RuntimeException(ex); }
