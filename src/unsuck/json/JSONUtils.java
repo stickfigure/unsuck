@@ -55,12 +55,13 @@ public class JSONUtils
 	 *
 	 * ex: return JSONUtils.fromJSON(this.answersJson, new TypeReference<List<StanzaAnswer>>(){});
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T fromJSON(String value, TypeReference<T> type)
 	{
 		ObjectMapper mapper = new ObjectMapper();
 		try
 		{
-			return mapper.readValue(value, type);
+			return (T)mapper.readValue(value, type);
 		}
 		catch (RuntimeException ex) { throw ex; }
 		catch (Exception ex) { throw new RuntimeException(ex); }
