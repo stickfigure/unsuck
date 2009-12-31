@@ -11,7 +11,7 @@ package unsuck.gae;
  *
  * @author Jeff Schnitzer
  */
-public class Timer
+public class GAETimer
 {
 	/** Total timeout before GAE aborts */
 	public static final long TIMEOUT_MILLIS = 1000 * 30;
@@ -26,7 +26,7 @@ public class Timer
 	long startTime;
 	
 	/** */
-	public Timer()
+	public GAETimer()
 	{
 		this.startTime = System.currentTimeMillis();
 	}
