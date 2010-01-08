@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
  * Any urls that get mapped to this filter will be forwarded to their .jsp equivalent.
  * Ie, /map -> /map.jsp.
  * 
+ * Ignores any paths that end with / so that index.jsp can be used if this filter
+ * is attached to a full directory.
+ * 
  * It is a filter rather than a servlet so that if a dispatcher cannot be found, the
  * request is passed through so whatever normal 404 mechanism can take place.
  * 
@@ -34,10 +37,17 @@ public class PrettyURLFilter extends AbstractFilter
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		String path = request.getServletPath();
-		RequestDispatcher disp = request.getRequestDispatcher(path + ".jsp");
-		if (disp == null)
+		if (path.endsWith("/"))
+		{
 			chain.doFilter(request, response);
+		}
 		else
-			disp.forward(request, response);
+		{
+			RequestDispatcher disp = request.getRequestDispatcher(path + ".jsp");
+			if (disp == null)
+				chain.doFilter(request, response);
+			else
+				disp.forward(request, response);
+		}
 	}
 }
