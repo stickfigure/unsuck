@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,15 @@ public class LogRequestFilter extends AbstractFilter
 	/** */
 	private final static Logger log = LoggerFactory.getLogger(LogRequestFilter.class);
 
+	/** */
+	@Override
+	public void init(FilterConfig cfg)
+	{
+		super.init(cfg);
+		
+		log.info("Starting application");
+	}
+	
 	/** */
 	@Override
 	@SuppressWarnings("unchecked")
