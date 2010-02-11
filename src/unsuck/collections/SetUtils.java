@@ -47,4 +47,25 @@ public class SetUtils
 		
 		return result;
 	}
+	
+	/**
+	 * @return true if the collections have the same content, efficiently.  Checks null equality.
+	 */
+	public static <T> boolean contentsEqual(Collection<T> col, Set<T> set)
+	{
+		if (col == null)
+			return set == null;
+		else if (set == null)
+			return false;
+		else if (col.size() != set.size())
+			return false;
+		else
+		{
+			for (T obj: col)
+				if (!set.contains(obj))
+					return false;
+			
+			return true;
+		}
+	}
 }
