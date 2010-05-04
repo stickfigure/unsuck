@@ -5,11 +5,14 @@
 
 package unsuck.gae;
 
+import java.sql.Time;
+
 /**
  * Simple timer that lets us know when we're nearing the end of google app engine's
  * time limitations.
  *
  * @author Jeff Schnitzer
+ * @author Scott Hernandez
  */
 public class GAETimer
 {
@@ -25,17 +28,30 @@ public class GAETimer
 	/** When we started */
 	long startTime;
 	
+	/** The number of millis to start warning at. */
+	long dangerMillis = DANGER_MILLIS;
+	
 	/** */
 	public GAETimer()
 	{
 		this.startTime = System.currentTimeMillis();
 	}
 
+	public GAETimer(long leeway)
+	{
+		this();
+		this.dangerMillis = TIMEOUT_MILLIS - leeway;
+	}
+
 	/** @return true if the time is nearing the deadline */
 	public boolean isNearDeadline()
 	{
-		return System.currentTimeMillis() - this.startTime > DANGER_MILLIS;
+		return getElapsedMillis() > dangerMillis;
+	}
+	
+	/** @return startTime minus now (in millis) */
+	public long getElapsedMillis()
+	{
+		return System.currentTimeMillis() - this.startTime;
 	}
 }
-
-
