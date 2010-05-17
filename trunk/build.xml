@@ -80,7 +80,10 @@
 	</target>
 
 	<target name="jar" depends="classes">
-		<jar destfile="${build.jar.file}" basedir="${build.classes.dir}" />
+		<jar destfile="${build.jar.file}" basedir="${build.classes.dir}">
+			<metainf dir="${src.dir}/META-INF">
+			</metainf>
+		</jar>
 	</target>
 	
 	<target name="init-version">

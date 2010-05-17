@@ -5,7 +5,6 @@
 
 package unsuck.gae;
 
-import java.sql.Time;
 
 /**
  * Simple timer that lets us know when we're nearing the end of google app engine's
@@ -20,26 +19,23 @@ public class GAETimer
 	public static final long TIMEOUT_MILLIS = 1000 * 30;
 	
 	/** Amount of leeway to maintain */
-	public static final long LEEWAY_MILLIS = 1000 * 7;
+	public static final long DEFAULT_LEEWAY_MILLIS = 1000 * 7;
 	
-	/** */
-	public static final long DANGER_MILLIS = TIMEOUT_MILLIS - LEEWAY_MILLIS;
-
 	/** When we started */
 	long startTime;
 	
 	/** The number of millis to start warning at. */
-	long dangerMillis = DANGER_MILLIS;
+	long dangerMillis;
 	
 	/** */
 	public GAETimer()
 	{
-		this.startTime = System.currentTimeMillis();
+		this(DEFAULT_LEEWAY_MILLIS);
 	}
 
 	public GAETimer(long leeway)
 	{
-		this();
+		this.startTime = System.currentTimeMillis();
 		this.dangerMillis = TIMEOUT_MILLIS - leeway;
 	}
 
