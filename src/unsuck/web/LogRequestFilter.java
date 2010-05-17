@@ -38,7 +38,6 @@ public class LogRequestFilter extends AbstractFilter
 	
 	/** */
 	@Override
-	@SuppressWarnings("unchecked")
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		if (log.isDebugEnabled())
