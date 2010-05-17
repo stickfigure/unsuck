@@ -1,8 +1,7 @@
-package unsuck.gae;
+package unsuck.cdi;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -27,10 +26,6 @@ public class CDIProxyServlet extends HttpServlet
 	private static final long serialVersionUID = 1L;
 	
 	/** */
-	//@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(CDIProxyServlet.class.getName());
-	
-	/** */
 	public static final String PROXY_FOR_INIT_PARAM_NAME = "realServletClass";
 	
 	/** The actual, CDI-managed servlet we wrap */
@@ -42,8 +37,6 @@ public class CDIProxyServlet extends HttpServlet
 	public void init() throws ServletException
 	{
 		BeanManager mgr = (BeanManager)this.getServletContext().getAttribute(BeanManager.class.getName());
-		
-		log.finest("BeanManager is " + mgr);
 		
 		String className = this.getServletConfig().getInitParameter(PROXY_FOR_INIT_PARAM_NAME);
 		try
@@ -66,8 +59,6 @@ public class CDIProxyServlet extends HttpServlet
 				CreationalContext cc = mgr.createCreationalContext(null);
 				this.actual = (HttpServlet)targ.produce(cc);
 				targ.inject(this.actual, cc);
-				
-				log.fine("Injected " + this.actual);
 			}
 		}
 		catch (ClassNotFoundException e)
