@@ -21,19 +21,26 @@ public class ServletProducerFilter extends AbstractFilter
 {
 	static ThreadLocal<HttpServletRequest> requestThreadLocal = new ThreadLocal<HttpServletRequest>();
 	
-	/** Producer method which will give us a String value from a request */
-	@Produces
-	@HttpParam("")
-	public static String getParamValue(InjectionPoint ip)
+	/** 
+	 * This is a silly trick that gets around Weld's annoying habit of ignoring Servlets
+	 * and Filters when looking for dependency injection classes.  Just create a new class. 
+	 */
+	public static class Producer
 	{
-		return getRequest().getParameter(ip.getAnnotated().getAnnotation(HttpParam.class).value());
-	}
-	
-	/** */
-	@Produces
-	public static HttpServletRequest getRequest()
-	{
-		return requestThreadLocal.get();
+		/** Producer method which will give us a String value from a request */
+		@Produces
+		@HttpParam("")
+		public static String getParamValue(InjectionPoint ip)
+		{
+			return getRequest().getParameter(ip.getAnnotated().getAnnotation(HttpParam.class).value());
+		}
+		
+		/** */
+		@Produces
+		public static HttpServletRequest getRequest()
+		{
+			return requestThreadLocal.get();
+		}
 	}
 
 	/** Sets the relevant thread local */
