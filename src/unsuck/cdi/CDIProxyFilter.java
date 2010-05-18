@@ -39,6 +39,8 @@ public class CDIProxyFilter extends AbstractFilter
 		String className = cfg.getInitParameter(PROXY_FOR_INIT_PARAM_NAME);
 		
 		this.actual = (Filter)CDIUtils.getOrRegisterBean(cfg.getServletContext(), className);
+		
+		this.actual.init(cfg);
 	}
 
 	/** */
@@ -46,5 +48,11 @@ public class CDIProxyFilter extends AbstractFilter
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException
 	{
 		this.actual.doFilter(request, response, chain);
+	}
+
+	@Override
+	public void destroy()
+	{
+		this.actual.destroy();
 	}
 }
