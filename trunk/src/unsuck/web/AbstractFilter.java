@@ -33,7 +33,7 @@ abstract public class AbstractFilter implements Filter
 
 	/**
 	 */
-	public void init(FilterConfig cfg)
+	public void init(FilterConfig cfg) throws ServletException
 	{
 		this.config = cfg;
 	}
