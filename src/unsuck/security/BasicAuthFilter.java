@@ -68,7 +68,7 @@ abstract public class BasicAuthFilter extends AbstractFilter
 
 	/** */
 	@Override
-	public void init(FilterConfig cfg)
+	public void init(FilterConfig cfg) throws ServletException
 	{
 		super.init(cfg);
 		
