@@ -17,7 +17,7 @@ import unsuck.web.AbstractFilter;
  * 
  * @author Jeff Schnitzer
  */
-public class ServletProducerFilter extends AbstractFilter
+public class HttpProducerFilter extends AbstractFilter
 {
 	static ThreadLocal<HttpServletRequest> requestThreadLocal = new ThreadLocal<HttpServletRequest>();
 	
