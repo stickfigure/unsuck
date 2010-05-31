@@ -4,6 +4,9 @@
 
 package unsuck.web;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +47,25 @@ public class CookieUtils
 			return null;
 		else
 			return cook.getValue();
+	}
+
+	/**
+	 * @return null if cookie is not present
+	 */
+	public static Map<String, String> getSubCookies(HttpServletRequest request, String name)
+	{
+		Cookie cook = getCookie(request, name);
+		if (cook == null)
+			return null;
+		else {
+			Map<String, String> cookMap = new TreeMap<String, String>();
+			String[] kvpairs = cook.getValue().split("&");
+			for(String kvPair : kvpairs) {
+				String[] valPair = kvPair.split("=");
+				cookMap.put(valPair[0], valPair[1]);
+			}
+			return cookMap;
+		}
 	}
 	
 	/**
