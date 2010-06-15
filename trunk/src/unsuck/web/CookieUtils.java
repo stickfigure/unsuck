@@ -56,14 +56,19 @@ public class CookieUtils
 	{
 		Cookie cook = getCookie(request, name);
 		if (cook == null)
+		{
 			return null;
-		else {
+		}
+		else
+		{
 			Map<String, String> cookMap = new TreeMap<String, String>();
 			String[] kvpairs = cook.getValue().split("&");
-			for(String kvPair : kvpairs) {
+			for(String kvPair : kvpairs)
+			{
 				String[] valPair = kvPair.split("=");
 				cookMap.put(valPair[0], valPair[1]);
 			}
+			
 			return cookMap;
 		}
 	}
