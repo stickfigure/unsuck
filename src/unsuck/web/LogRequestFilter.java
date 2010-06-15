@@ -42,6 +42,8 @@ public class LogRequestFilter extends AbstractFilter
 	{
 		if (log.isDebugEnabled())
 		{
+			log.debug(request.getMethod());
+			
 			StringBuffer url = request.getRequestURL();
 			
 			String queryString = request.getQueryString();
