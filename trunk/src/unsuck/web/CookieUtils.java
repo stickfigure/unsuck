@@ -50,6 +50,7 @@ public class CookieUtils
 	}
 
 	/**
+	 * For systems like Facebook that encode a url-type map of values within a cookie.
 	 * @return null if cookie is not present
 	 */
 	public static Map<String, String> getSubCookies(HttpServletRequest request, String name)
@@ -66,7 +67,7 @@ public class CookieUtils
 			for (String kvPair: kvpairs)
 			{
 				String[] valPair = kvPair.split("=");
-				cookMap.put(valPair[0], valPair[1]);
+				cookMap.put(URLUtils.urlDecode(valPair[0]), URLUtils.urlDecode(valPair[1]));
 			}
 			
 			return cookMap;
