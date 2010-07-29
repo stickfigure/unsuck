@@ -25,7 +25,7 @@ public class CDIUtils
 	 * @param ctx will hold the Weld BeanManager (this only works with weld)
 	 * @param className is the name of the class to create/register a bean for
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Object getOrRegisterBean(ServletContext ctx, String className)
 	{
 		BeanManager mgr = (BeanManager)ctx.getAttribute(BeanManager.class.getName());
