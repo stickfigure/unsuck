@@ -19,9 +19,15 @@ import org.slf4j.LoggerFactory;
  * synchronized but iteration is not.  There is no check for comodifcation,
  * just a sort of "eventual consistency" on iteration.</p>
  * 
- * <p>This class is not guaranteed to work in all JVMs or with all compilers due
- * to memory caching and instruction reordering optimizations.  However, it
- * should work "well enough" in the Sun JVM on Intel.</p>
+ * <p>This class will not work on all (or even most) JVMs and architectures.
+ * In particular, it will probably fail on weakly-ordered architectures.  However,
+ * x86 (including 64-bit) is strongly ordered so it should work well enough.
+ * Another issue is the java compiler, which could reorder code in all sorts of
+ * optimizations.  The bottom line is that this needs to be tested under load in your
+ * specific environment before you can be sure it works.  The author is using
+ * it successfully with OpenJDK + x86-64.</p>
+ * 
+ * <p>For a lot more info, google "memory barrier".</p>
  * 
  * <p>There is *no* guarantee on iteration order.</p>
  */
