@@ -102,15 +102,18 @@ public class CookieUtils
 	 */
 	public static String toString(Cookie cook)
 	{
-		return String.format("Cookie{name=%s, value=%s, domain=%s, maxAge=%s, path=%s, secure=%s, version=%s, comment=%s}",
-				cook.getName(),
-				cook.getValue(),
-				cook.getDomain(),
-				cook.getMaxAge(),
-				cook.getPath(),
-				cook.getSecure(),
-				cook.getVersion(),
-				cook.getComment()
-				);
+		if (cook == null)
+			return "null";
+		else
+			return String.format("Cookie{name=%s, value=%s, domain=%s, maxAge=%s, path=%s, secure=%s, version=%s, comment=%s}",
+					cook.getName(),
+					cook.getValue(),
+					cook.getDomain(),
+					cook.getMaxAge(),
+					cook.getPath(),
+					cook.getSecure(),
+					cook.getVersion(),
+					cook.getComment()
+					);
 	}
 }
