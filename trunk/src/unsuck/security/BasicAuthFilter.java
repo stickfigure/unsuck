@@ -84,7 +84,7 @@ abstract public class BasicAuthFilter extends AbstractFilter
 		{
 			String base64AuthInfo = authorization.substring("Basic ".length());
 			// There is no charset standard for basic auth, utf-8 is as good as any
-			String authInfo = new String(Base64.decodeBase64(base64AuthInfo), "utf-8");
+			String authInfo = new String(Base64.decodeBase64(base64AuthInfo.getBytes("utf-8")), "utf-8");
 			String[] authParts = authInfo.split(":");
 			
 			if (this.authenticate(authParts[0], authParts[1]))
