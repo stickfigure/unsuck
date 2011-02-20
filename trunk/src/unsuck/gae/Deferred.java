@@ -159,7 +159,7 @@ import com.google.appengine.api.utils.SystemProperty;
  *    
  * @author <a href="mailto:vbonfanti@gmail.com">Vince Bonfanti</a>
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "deprecation"})
 public class Deferred extends HttpServlet {
     
     private static final String DEFAULT_QUEUE_NAME = "deferred";
