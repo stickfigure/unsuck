@@ -45,6 +45,13 @@ public class FastLooseMap<K, V> implements Iterable<V>
 		V payload;
 		Node<V> next;
 		Node<V> previous;
+		
+		public String toString()
+		{
+			String prev = previous == null ? null : "present";
+			String nxt = next == null ? null : "present";
+			return this.getClass().getSimpleName() + "{previous=" + prev + ", next=" + nxt + ", payload=" + payload + "}";
+		}
 	}
 	
 	/**
@@ -145,8 +152,11 @@ public class FastLooseMap<K, V> implements Iterable<V>
 			return null;
 		else
 		{
-			node.previous.next = node.next;
-			node.next.previous = node.previous;
+			if (node.previous != null)
+				node.previous.next = node.next;
+			
+			if (node.next != null)
+				node.next.previous = node.previous;
 			
 			this.nodeMap.remove(key);
 			
@@ -179,4 +189,9 @@ public class FastLooseMap<K, V> implements Iterable<V>
 		return this.nodeMap.size();
 	}
 
+	/** A brief description */
+	public String toString()
+	{
+		return this.getClass().getSimpleName() + "{size=" + size() + "}";
+	}
 }
