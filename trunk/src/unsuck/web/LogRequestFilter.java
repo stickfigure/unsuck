@@ -6,6 +6,7 @@ package unsuck.web;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -40,6 +41,15 @@ public class LogRequestFilter extends AbstractFilter
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
+		logRequest(request);
+		chain.doFilter(request, response);
+	}
+	
+	/**
+	 * Log the specified request.
+	 */
+	public static void logRequest(HttpServletRequest request)
+	{
 		if (log.isDebugEnabled())
 		{
 			log.debug(request.getMethod());
@@ -55,6 +65,10 @@ public class LogRequestFilter extends AbstractFilter
 			
 			log.debug(url.toString());
 			
+			for (Map.Entry<String, String[]> param: request.getParameterMap().entrySet())
+				for (String val: param.getValue())
+					log.debug("    " + param.getKey() + "=" + val);
+			
 			Enumeration<String> nameEnu = request.getHeaderNames();
 			while (nameEnu.hasMoreElements())
 			{
@@ -67,7 +81,5 @@ public class LogRequestFilter extends AbstractFilter
 				}
 			}
 		}
-		
-		chain.doFilter(request, response);
 	}
 }
