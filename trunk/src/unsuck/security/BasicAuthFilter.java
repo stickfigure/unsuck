@@ -79,29 +79,37 @@ abstract public class BasicAuthFilter extends AbstractFilter
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
-		String authorization = request.getHeader("Authorization");
-		if (authorization != null && authorization.startsWith("Basic "))
+		try
 		{
-			String base64AuthInfo = authorization.substring("Basic ".length());
-			// There is no charset standard for basic auth, utf-8 is as good as any
-			String authInfo = new String(Base64.decodeBase64(base64AuthInfo.getBytes("utf-8")), "utf-8");
-			String[] authParts = authInfo.split(":");
-			
-			if (this.authenticate(authParts[0], authParts[1]))
+			String authorization = request.getHeader("Authorization");
+			if (authorization != null && authorization.startsWith("Basic "))
 			{
-				chain.doFilter(request, response);
-				return;
+				String base64AuthInfo = authorization.substring("Basic ".length());
+				// There is no charset standard for basic auth, utf-8 is as good as any
+				String authInfo = new String(Base64.decodeBase64(base64AuthInfo.getBytes("utf-8")), "utf-8");
+				String[] authParts = authInfo.split(":");
+				
+				if (this.authenticate(authParts[0], authParts[1]))
+				{
+					chain.doFilter(request, response);
+					return;
+				}
+				else
+				{
+					if (log.isWarnEnabled())
+						log.warn("Failed auth attempt for: " + authParts[0]);
+				}
 			}
 			else
 			{
 				if (log.isWarnEnabled())
-					log.warn("Failed auth attempt for: " + authParts[0]);
+					log.warn("Bad authorization header: " + authorization);
 			}
 		}
-		else
+		catch (Exception ex)
 		{
 			if (log.isWarnEnabled())
-				log.warn("Bad authorization header: " + authorization);
+				log.warn("Error trying to parse authorization header", ex);
 		}
 
 		// return auth required
