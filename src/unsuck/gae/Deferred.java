@@ -16,11 +16,11 @@
 package unsuck.gae;
 
 import static com.google.appengine.api.datastore.DatastoreServiceFactory.getDatastoreService;
-import static com.google.appengine.api.labs.taskqueue.QueueConstants.maxTaskSizeBytes;
-import static com.google.appengine.api.labs.taskqueue.QueueFactory.getQueue;
-import static com.google.appengine.api.labs.taskqueue.TaskOptions.Builder.url;
-import static com.google.appengine.api.labs.taskqueue.TaskOptions.Builder.withDefaults;
-import static com.google.appengine.api.labs.taskqueue.TaskOptions.Method.POST;
+import static com.google.appengine.api.taskqueue.QueueConstants.maxTaskSizeBytes;
+import static com.google.appengine.api.taskqueue.QueueFactory.getQueue;
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withDefaults;
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
+import static com.google.appengine.api.taskqueue.TaskOptions.Method.POST;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
@@ -45,9 +45,9 @@ import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.labs.taskqueue.QueueFailureException;
-import com.google.appengine.api.labs.taskqueue.TaskHandle;
-import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.QueueFailureException;
+import com.google.appengine.api.taskqueue.TaskHandle;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.utils.SystemProperty;
 
 /**
@@ -159,10 +159,10 @@ import com.google.appengine.api.utils.SystemProperty;
  *    
  * @author <a href="mailto:vbonfanti@gmail.com">Vince Bonfanti</a>
  */
-@SuppressWarnings({"serial", "deprecation"})
 public class Deferred extends HttpServlet {
-    
-    private static final String DEFAULT_QUEUE_NAME = "deferred";
+	private static final long serialVersionUID = 1L;
+	
+	private static final String DEFAULT_QUEUE_NAME = "deferred";
     private static final String TASK_CONTENT_TYPE = "application/x-java-serialized-object";
     private static final String ENTITY_KIND = Deferred.class.getName();
     private static final String TASK_PROPERTY = "taskBytes";
@@ -241,7 +241,7 @@ public class Deferred extends HttpServlet {
      * @return A {@link TaskHandle} for the queued task.
      */
     public static TaskHandle defer( Deferrable task, String queueName ) {
-        return defer( task, queueName, taskUrl != null ? url( taskUrl ) : withDefaults() );
+        return defer( task, queueName, taskUrl != null ? withUrl( taskUrl ) : withDefaults() );
     }
     
     /**
