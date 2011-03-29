@@ -45,6 +45,7 @@ import com.google.appengine.api.datastore.DatastoreFailureException;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.taskqueue.QueueFailureException;
 import com.google.appengine.api.taskqueue.TaskHandle;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -222,7 +223,11 @@ public class Deferred extends HttpServlet {
      * @return A {@link TaskHandle} for the queued task.
      */
     public static TaskHandle defer( Deferrable task ) {
-        return defer( task, queueName );
+        return defer( task, queueName, null );
+    }
+    
+    public static TaskHandle defer( Deferrable task, Transaction txn ) {
+        return defer( task, queueName, txn );
     }
     
     /**
@@ -240,8 +245,8 @@ public class Deferred extends HttpServlet {
      * @throws QueueFailureException If an error occurs serializing the task.
      * @return A {@link TaskHandle} for the queued task.
      */
-    public static TaskHandle defer( Deferrable task, String queueName ) {
-        return defer( task, queueName, taskUrl != null ? withUrl( taskUrl ) : withDefaults() );
+    public static TaskHandle defer( Deferrable task, String queueName, Transaction txn ) {
+        return defer( task, queueName, taskUrl != null ? withUrl( taskUrl ) : withDefaults(), txn );
     }
     
     /**
@@ -289,7 +294,7 @@ public class Deferred extends HttpServlet {
      * @return A {@link TaskHandle} for the queued task.
      */
     public static TaskHandle defer( Deferrable task, TaskOptions taskOptions ) {
-        return defer( task, queueName, taskOptions );
+        return defer( task, queueName, taskOptions, null );
     }
     
     /**
@@ -332,13 +337,13 @@ public class Deferred extends HttpServlet {
      * are specified.
      * @return A {@link TaskHandle} for the queued task.
      */
-    public static TaskHandle defer( Deferrable task, String queueName, TaskOptions taskOptions ) {
+    public static TaskHandle defer( Deferrable task, String queueName, TaskOptions taskOptions, Transaction txn ) {
         // See issue #2461 (http://code.google.com/p/googleappengine/issues/detail?id=2461).
         // If this issue is ever resolved, the params should be removed from the TaskOptions.
         byte[] taskBytes = serialize( task );
         if ( taskBytes.length <= maxTaskSizeBytes() ) {
             try {
-                return queueTask( taskBytes, queueName, taskOptions );
+                return queueTask( taskBytes, queueName, taskOptions, txn );
             } catch ( IllegalArgumentException e ) {
                 log.warning( e.getMessage() + ": " + taskBytes.length );
                 // task size too large, fall through
@@ -350,7 +355,7 @@ public class Deferred extends HttpServlet {
         Key key = getDatastoreService().put( entity );
         log.info( "put datastore key: " + key );
         try {
-            return queueTask( serialize( key ), queueName, taskOptions );
+            return queueTask( serialize( key ), queueName, taskOptions, txn );
         } catch ( RuntimeException e ) {
             deleteEntity( key ); // delete entity if error queuing task
             throw e;
@@ -366,8 +371,8 @@ public class Deferred extends HttpServlet {
      * @return
      */
     private static TaskHandle queueTask( byte[] taskBytes, String queueName,
-            TaskOptions taskOptions ) {
-        return getQueue( queueName ).add( taskOptions.method( POST ).payload(
+            TaskOptions taskOptions, Transaction txn ) {
+        return getQueue( queueName ).add( txn, taskOptions.method( POST ).payload(
                                                 taskBytes, TASK_CONTENT_TYPE ) );
     }
     
@@ -433,10 +438,10 @@ public class Deferred extends HttpServlet {
                                                 new BufferedOutputStream( bytesOut ) );
             objectOut.writeObject( obj );
             objectOut.close();
-            if ( isDevelopment() ) { // workaround for issue #2097
+            //if ( isDevelopment() ) { // workaround for issue #2097
                 return encodeBase64( bytesOut.toByteArray() );
-            }
-            return bytesOut.toByteArray();
+            //}
+            //return bytesOut.toByteArray();
         } catch ( IOException e ) {
             throw new QueueFailureException( e );
         }
@@ -474,9 +479,9 @@ public class Deferred extends HttpServlet {
     private static Object deserialize( byte[] bytesIn ) {
         ObjectInputStream objectIn = null;
         try {
-            if ( isDevelopment() ) { // workaround for issue #2097
+            //if ( isDevelopment() ) { // workaround for issue #2097
                 bytesIn = decodeBase64( bytesIn );
-            }
+            //}
             objectIn = new ObjectInputStream( new BufferedInputStream(
                                         new ByteArrayInputStream( bytesIn ) ) );
             return objectIn.readObject();
