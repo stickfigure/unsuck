@@ -10,7 +10,7 @@
 <project name="unsuck" default="jar" basedir=".">
 
 	<property name="name" value="${ant.project.name}" />
-	
+
 	<property file="user.properties" />
 	<property file="${user.home}/build.properties" />
 	<property file="build.properties" />
@@ -25,18 +25,18 @@
 	<property name="build.classes.dir" location="${build.dir}/classes" />
 
 	<property name="build.jar.file" location="${build.dir}/${name}.jar" />
-	
+
 	<property name="docs.dir" value="${build.dir}/docs" />
 
 	<property name="lib.dir" location="lib" />
 	<property name="src.dir" location="src" />
-	
+
 	<tstamp/>
 	<tstamp>
 		<format property="YEAR" pattern="yyyy" />
 	</tstamp>
 
-	<path id="master.classpath">		
+	<path id="master.classpath">
 		<fileset dir="${lib.dir}">
 			<include name="**/*.jar" />
 		</fileset>
@@ -66,14 +66,15 @@
 	<target name="clean">
 		<delete dir="${build.dir}" />
 	</target>
-	
- 	<target name="classes" depends="init">
+
+	<target name="classes" depends="init">
 		<mkdir dir="${build.classes.dir}" />
- 		
+
 		<javac srcdir="${src.dir}"
 				destdir="${build.classes.dir}"
 				debug="${build.debug}"
 				deprecation="${build.deprecation}"
+				includeantruntime="false"
 			>
 			<classpath refid="master.classpath" />
 		</javac>
@@ -85,7 +86,7 @@
 			</metainf>
 		</jar>
 	</target>
-	
+
 	<target name="init-version">
 		<input addproperty="build.version" message="Version number?" />
 	</target>
@@ -104,7 +105,7 @@
 			<bottom><![CDATA[<i>Copyright &#169; ${YEAR} Jeff Schnitzer and a ship of thieves. All Rights Reserved. Build version: ${build.version}</i>]]></bottom>
 		</javadoc>
 	</target>
-	
+
 	<target name="test" depends="classes">
 		<taskdef name="testng" classpathref="run.classpath" classname="org.testng.TestNGAntTask" />
 
@@ -112,10 +113,10 @@
 			<classfileset dir="${build.classes.dir}" includes="**/test/*.class"/>
 		</testng>
 	</target>
-	
+
 	<target name="deploy" depends="jar">
 		<copy file="${build.jar.file}" todir="../Mobcasting/server/war/WEB-INF/lib" />
 		<copy file="${build.jar.file}" todir="../Mobcasting/pushproxy/lib" />
 	</target>
-	
+
 </project>
