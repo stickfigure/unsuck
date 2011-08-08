@@ -15,18 +15,16 @@ import unsuck.web.AbstractFilter;
  * <p>Filter which proxies to another filter which was loaded using CDI and thus receives
  * proper dependency injection. You can use this on containers (like GAE) which do not support
  * CDI for Servlets.</p>
- * 
+ *
  * <p>Use an init-param which defines the actual class of the filter to load.</p>
- * 
+ *
  * @author Jeff Schnitzer
  */
 public class CDIProxyFilter extends AbstractFilter
 {
-	private static final long serialVersionUID = 1L;
-	
 	/** */
 	public static final String PROXY_FOR_INIT_PARAM_NAME = "realFilterClass";
-	
+
 	/** The actual, CDI-managed filter we wrap */
 	Filter actual;
 
@@ -35,11 +33,11 @@ public class CDIProxyFilter extends AbstractFilter
 	public void init(FilterConfig cfg) throws ServletException
 	{
 		super.init(cfg);
-		
+
 		String className = cfg.getInitParameter(PROXY_FOR_INIT_PARAM_NAME);
-		
+
 		this.actual = (Filter)CDIUtils.getOrRegisterBean(cfg.getServletContext(), className);
-		
+
 		this.actual.init(cfg);
 	}
 
