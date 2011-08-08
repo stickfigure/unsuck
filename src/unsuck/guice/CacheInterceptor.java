@@ -3,13 +3,15 @@ package unsuck.guice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-
 /**
  * <p>Guice AOP interceptor which looks for {@code @Cache} annotation on methods and will permanently
  * cache the results.  Null results are cached as well.</p>
  * 
  * <p>Classes which are intercepted must implement the {@code Cacheable} interface.  Usually
  * just extend the {@code Caching} class.</p>
+ * 
+ * <p>Put this in your Guice module configure():</p>
+ * <p>{@code bindInterceptor(Matchers.subclassesOf(Cacheable.class), Matchers.annotatedWith(Cache.class), new CacheInterceptor());}
  * 
  * @author Jeff Schnitzer <jeff@infohazard.org>
  */

@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>Guice AOP annotation which indicates method results should be cached.</p>
+ * <p>Note that methods with this annotation CANNOT BE PRIVATE.</p>
  * 
  * @author Jeff Schnitzer <jeff@infohazard.org>
  */
