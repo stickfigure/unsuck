@@ -9,9 +9,11 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Some basic utilities for manipulating urls.
- * 
+ *
  * @author Jeff Schnitzer
  */
 public class URLUtils
@@ -23,24 +25,24 @@ public class URLUtils
 	{
 		StringBuilder bld = new StringBuilder();
 		bld.append(base);
-		
-		if (params != null && !params.isEmpty())
+
+		if ((params != null) && !params.isEmpty())
 		{
 			boolean useAmpersand = false;
 			for (Map.Entry<String, Object> entry: params.entrySet())
 			{
 				bld.append(useAmpersand ? "&" : "?");
 				useAmpersand = true;
-				
+
 				bld.append(urlEncode(entry.getKey()));
 				bld.append("=");
 				bld.append(urlEncode(entry.getValue()));
 			}
 		}
-		
+
 		return bld.toString();
 	}
-	
+
 	/**
 	 * An interface to URLEncoder.encode() that isn't inane
 	 */
@@ -52,7 +54,7 @@ public class URLUtils
 		}
 		catch (UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	}
-	
+
 	/**
 	 * An interface to URLDecoder.decode() that isn't inane
 	 */
@@ -63,5 +65,21 @@ public class URLUtils
 			return URLDecoder.decode(value.toString(), "utf-8");
 		}
 		catch (UnsupportedEncodingException e) { throw new RuntimeException(e); }
+	}
+
+	/**
+	 * Generates a url from the request that is good for sending off with redirects
+	 */
+	public static String getActualUrl(HttpServletRequest request) {
+		StringBuffer url = request.getRequestURL();
+
+		String queryString = request.getQueryString();
+		if (queryString != null)
+		{
+			url.append("?");
+			url.append(queryString);
+		}
+
+		return url.toString();
 	}
 }
