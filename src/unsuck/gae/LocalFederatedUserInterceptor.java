@@ -30,7 +30,7 @@ public class LocalFederatedUserInterceptor implements MethodInterceptor
 			User user = (User)inv.getThis();
 			
 			if (user.getFederatedIdentity() == null)
-				return user.getUserId();
+				return "fake:" + user.getUserId();
 			else
 				return user.getFederatedIdentity();
 		}
