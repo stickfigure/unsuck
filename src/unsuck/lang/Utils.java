@@ -29,8 +29,33 @@ public class Utils
 	/**
 	 * Splits name into words. Normalizes to lower case.
 	 */
-	public static void breakdown(String name, Set<String> words) {
+	public static void breakdown(String name, Set<String> words)
+	{
 		String[] tokens = name.toLowerCase().split(" ");
 		words.addAll(Arrays.asList(tokens));
+	}
+	
+	/**
+	 * Takes a normal string and turns it into something suitable for a title in a URL.
+	 * This is all about SEO.  Basically, spaces go to underscore and anything that isn't
+	 * URL-friendly gets stripped out.
+	 */
+	public static String makeTitle(String title)
+	{
+		StringBuilder bld = new StringBuilder();
+		
+		for (int i=0; i<title.length(); i++)
+		{
+			char ch = title.charAt(i);
+			
+			if (Character.isWhitespace(ch))
+				bld.append('_');
+			else if (Character.isLetterOrDigit(ch))
+				bld.append(ch);
+			
+			// otherwise skip
+		}
+		
+		return bld.toString();
 	}
 }
