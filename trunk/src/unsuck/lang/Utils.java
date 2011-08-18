@@ -37,7 +37,7 @@ public class Utils
 	
 	/**
 	 * Takes a normal string and turns it into something suitable for a title in a URL.
-	 * This is all about SEO.  Basically, spaces go to underscore and anything that isn't
+	 * This is all about SEO.  Basically, spaces go to dash and anything that isn't
 	 * URL-friendly gets stripped out.
 	 */
 	public static String makeTitle(String title)
@@ -49,7 +49,7 @@ public class Utils
 			char ch = title.charAt(i);
 			
 			if (Character.isWhitespace(ch))
-				bld.append('_');
+				bld.append('-');
 			else if (Character.isLetterOrDigit(ch))
 				bld.append(ch);
 			
