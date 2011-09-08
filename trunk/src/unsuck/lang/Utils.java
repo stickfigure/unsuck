@@ -42,6 +42,9 @@ public class Utils
 	 */
 	public static String makeTitle(String title)
 	{
+		if (title == null)
+			return "";
+		
 		StringBuilder bld = new StringBuilder();
 		
 		for (int i=0; i<title.length(); i++)
