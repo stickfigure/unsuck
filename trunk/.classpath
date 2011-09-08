@@ -18,6 +18,7 @@
 	<classpathentry kind="lib" path="lib/appengine-api-labs-1.5.2.jar"/>
 	<classpathentry kind="lib" path="lib/aopalliance.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="lib/jaxrs-api-2.2.2.GA.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
