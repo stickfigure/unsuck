@@ -48,6 +48,7 @@ public class LogRequestFilter extends AbstractFilter
 	/**
 	 * Log the specified request.
 	 */
+	@SuppressWarnings("unchecked")
 	public static void logRequest(HttpServletRequest request)
 	{
 		if (log.isDebugEnabled())
@@ -65,7 +66,7 @@ public class LogRequestFilter extends AbstractFilter
 			
 			log.debug(url.toString());
 			
-			for (Map.Entry<String, String[]> param: request.getParameterMap().entrySet())
+			for (Map.Entry<String, String[]> param: ((Map<String, String[]>)request.getParameterMap()).entrySet())
 				for (String val: param.getValue())
 					log.debug("    " + param.getKey() + "=" + val);
 			
