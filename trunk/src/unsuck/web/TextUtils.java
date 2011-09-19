@@ -7,22 +7,22 @@ package unsuck.web;
 
 /**
  * Some simple static methods useful for dealing with text on the web.
- *  
+ *
  * @author Jeff Schnitzer
  */
-public class TextUtils 
+public class TextUtils
 {
 	/**
 	 * Escapes all xml characters, but also converts newlines to br tags.
 	 */
 	public static String escapeText(String orig)
 	{
-		StringBuffer buf = new StringBuffer();
-		
+		StringBuilder buf = new StringBuilder();
+
 		for (int i=0; i<orig.length(); i++)
 		{
 			char c = orig.charAt(i);
-			
+
 			switch(c)
 			{
 				case '>': buf.append("&gt;"); break;
@@ -34,8 +34,8 @@ public class TextUtils
 				default: buf.append(c);
 			}
 		}
-		
-		return buf.toString(); 
+
+		return buf.toString();
 	}
 
 	/**
@@ -43,12 +43,12 @@ public class TextUtils
 	 */
 	public static String escapeXML(String orig)
 	{
-		StringBuffer buf = new StringBuffer();
-		
+		StringBuilder buf = new StringBuilder();
+
 		for (int i=0; i<orig.length(); i++)
 		{
 			char c = orig.charAt(i);
-			
+
 			switch(c)
 			{
 				case '>': buf.append("&gt;"); break;
@@ -59,7 +59,7 @@ public class TextUtils
 				default: buf.append(c);
 			}
 		}
-		
-		return buf.toString(); 
+
+		return buf.toString();
 	}
 }
