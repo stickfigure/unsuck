@@ -1,5 +1,6 @@
 package unsuck.lang;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -60,5 +61,22 @@ public class Utils
 		}
 		
 		return bld.toString();
+	}
+	
+	/**
+	 * Without the stupid exception
+	 */
+	public static byte[] getBytes(String str, String encoding)
+	{
+		try { return str.getBytes(encoding); }
+		catch (UnsupportedEncodingException ex) { throw new RuntimeException(ex); }
+	}
+	
+	/**
+	 * Without the stupid exception
+	 */
+	public static byte[] getBytesUTF8(String str)
+	{
+		return getBytes(str, "UTF-8");
 	}
 }
