@@ -3,9 +3,13 @@
 
 package unsuck.web;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
@@ -16,11 +20,27 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class FakeHttpServletRequest extends HttpServletRequestWrapper
 {
+	/** Create a stub interface via dynamic proxy that does nothing */
+	private static HttpServletRequest makeStub()
+	{
+		return (HttpServletRequest)Proxy.newProxyInstance(
+				Thread.currentThread().getContextClassLoader(),
+				new Class<?>[] { HttpServletRequest.class },
+				new InvocationHandler() {
+					@Override
+					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+					{
+						throw new UnsupportedOperationException();
+					}
+				});
+	}
+	
 	Map<String, Object> attrs = new HashMap<String, Object>();
 	
 	public FakeHttpServletRequest()
 	{
-		super(null);
+		// Can't actually pass null here
+		super(makeStub());
 	}
 
 	@Override
