@@ -75,7 +75,7 @@ public class CookieUtils
 	}
 	
 	/**
-	 * Sets a cookie which expires when the browser shuts down
+	 * Sets a root cookie which expires when the browser shuts down
 	 */
 	public static void setCookie(HttpServletResponse response, String name, String value)
 	{
@@ -83,12 +83,13 @@ public class CookieUtils
 	}
 	
 	/**
-	 * Sets a cookie value with a specific maxAge in seconds (0 is delete, -1 is "nonpersistent")
+	 * Sets a root cookie value with a specific maxAge in seconds (0 is delete, -1 is "nonpersistent")
 	 */
 	public static void setCookie(HttpServletResponse response, String name, String value, int maxAge)
 	{
 		Cookie cook = new Cookie(name, value);
 		cook.setMaxAge(maxAge);
+		cook.setPath("/");
 		
 		response.addCookie(cook);
 	}
