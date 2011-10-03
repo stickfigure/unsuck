@@ -28,6 +28,7 @@ public class Situation
 	/** App id, ie "voost0" - will be same even on dev instance */
 	public final static String RAW_APPENGINE_ID = SystemProperty.applicationId.get() == null ? "testmode" : SystemProperty.applicationId.get();
 	public final static String APPENGINE_ID = RAW_APPENGINE_ID.startsWith("s~") ? RAW_APPENGINE_ID.substring("s~".length()) : RAW_APPENGINE_ID;
+	public final static String VERSION = SystemProperty.version.get();
 
 	/** */
 	public static boolean isProduction()
