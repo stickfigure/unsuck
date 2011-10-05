@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheService.IdentifiableValue;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
 /**
@@ -59,6 +60,20 @@ public class Cache<K, V>
 		try
 		{
 			return (V)this.memCache.get(key);
+		}
+		catch (Exception e)
+		{
+			log.warn("Exception from memCache: " + e);
+			return null;
+		}
+	}
+	
+	/** */
+	public IdentifiableValue getIdentifiable(K key)
+	{
+		try
+		{
+			return this.memCache.getIdentifiable(key);
 		}
 		catch (Exception e)
 		{
