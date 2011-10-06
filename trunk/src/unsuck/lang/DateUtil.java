@@ -6,6 +6,8 @@ package unsuck.lang;
 import java.sql.Date;
 import java.util.Calendar;
 
+import org.joda.time.Duration;
+
 /**
  * Some tools for working with dates.
  *  
@@ -68,5 +70,41 @@ public class DateUtil
 			age = age - 1;
 		}
 		return age;
+	}
+
+	/**
+	 * @return something like "25 days", "3 hours" or "15 minutes" depending on what is most appropriate
+	 */
+	public static String describeDuration(Duration amount)
+	{
+		long days = amount.getStandardDays();
+		if (days >= 2)
+			return days + " days";
+		
+		long hours = amount.getStandardHours();
+		if (hours >= 2)
+			return hours + " hours";
+
+		long minutes = amount.getStandardMinutes();
+		if (minutes >= 2)
+			return minutes + " minutes";
+		
+		long seconds = amount.getStandardSeconds();
+		if (seconds == 1)
+			return seconds + " second";
+		else
+			return seconds + " seconds";
+	}
+
+	/**
+	 * @return something like "25 days", "3 hours" or "15 minutes" depending on what is most appropriate,
+	 *  or null if millis is 0 or negative.
+	 */
+	public static String describeDuration(long millis)
+	{
+		if (millis <= 0)
+			return null;
+		else
+			return describeDuration(new Duration(millis));
 	}
 }
