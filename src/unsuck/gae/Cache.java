@@ -29,6 +29,17 @@ public class Cache<K, V>
 	private static final Logger log = LoggerFactory.getLogger(Cache.class);
 	
 	/** */
+	public static class Identifiable<V> 
+	{
+		IdentifiableValue iv;
+		
+		public Identifiable(IdentifiableValue iv) { this.iv = iv; }
+		
+		@SuppressWarnings("unchecked")
+		public V getValue() { return (V)iv.getValue(); }
+	}
+	
+	/** */
 	MemcacheService memCache;
 	
 	/** If non-null, expire all entries after this number of seconds */
@@ -68,18 +79,42 @@ public class Cache<K, V>
 		}
 	}
 	
-	/** */
-	public IdentifiableValue getIdentifiable(K key)
+	/**
+	 * Has the same behavior as the raw memcache version - if there is not a valid item in the cache,
+	 * it will return null rather than a valid Identifiable.
+	 */
+	public Identifiable<V> getIdentifiable(K key)
 	{
 		try
 		{
-			return this.memCache.getIdentifiable(key);
+			IdentifiableValue iv = this.memCache.getIdentifiable(key);
+			return (iv == null) ? null : new Identifiable<V>(iv);
 		}
 		catch (Exception e)
 		{
 			log.warn("Exception from memCache: " + e);
 			return null;
 		}
+	}
+	
+	/**
+	 * Returns an Identifiable, even if there was nothing in the cache.  It does
+	 * this by immediately putting and refetching a null value.  Note that the return value
+	 * can still be null due to a poorly timed cache flush (or memcache disabled).  It only
+	 * tries once.
+	 * 
+	 * @return null if the refetch failed too
+	 */
+	public Identifiable<V> getIdentifiableSafe(K key)
+	{
+		Identifiable<V> idable = this.getIdentifiable(key);
+		if (idable == null)
+		{
+			this.memCache.put(key, null);
+			idable = this.getIdentifiable(key);
+		}
+		
+		return idable;
 	}
 	
 	/** */
@@ -99,6 +134,18 @@ public class Cache<K, V>
 			this.memCache.putAll((Map<Object, Object>)values, Expiration.byDeltaSeconds(this.expireSeconds));
 		else
 			this.memCache.putAll((Map<Object, Object>)values);
+	}
+	
+	/**
+	 * Works just like regular putIfUntouched
+	 * @return true if newValue was stored, false if there was a collision  
+	 */
+	public boolean putIfUntouched(K key, Identifiable<V> oldValue, V newValue)
+	{
+		if (this.expireSeconds != null)
+			return this.memCache.putIfUntouched(key, oldValue.iv, newValue, Expiration.byDeltaSeconds(this.expireSeconds));
+		else
+			return this.memCache.putIfUntouched(key, oldValue.iv, newValue);
 	}
 	
 	/** */
