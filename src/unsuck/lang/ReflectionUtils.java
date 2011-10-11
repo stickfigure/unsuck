@@ -54,4 +54,14 @@ public class ReflectionUtils
 		catch (SecurityException ex) { throw new RuntimeException(ex); }
 		catch (NoSuchFieldException ex) { throw new RuntimeException(ex); }
 	}
+
+	/** Checked exceptions are LAME. */
+	public static Object getStaticFieldValue(Class<?> clazz, String fieldName) {
+		return fieldGet(getField(clazz, fieldName), null);
+	}
+
+	/** Checked exceptions are LAME. */
+	public static Object getFieldValue(Object obj, String fieldName) {
+		return fieldGet(getField(obj.getClass(), fieldName), obj);
+	}
 }
