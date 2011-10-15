@@ -176,4 +176,9 @@ public class Cache<K, V>
 	{
 		return (Set<K>)this.memCache.deleteAll((Collection<Object>)keys);
 	}
+	
+	/** */
+	public Long increment(K key, long delta) {
+		return this.memCache.increment(key, delta);
+	}
 }
