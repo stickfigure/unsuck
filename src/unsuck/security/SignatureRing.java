@@ -21,17 +21,20 @@ public class SignatureRing<T>
 {
 	/** Simple mapper with default typing enabled so we can deserialize an arbitrary object */
 	private static BetterObjectMapper mapper = new BetterObjectMapper();
-	static {
-		mapper.enableDefaultTyping();
-	}
+	// This doesn't work
+	//static {
+	//	mapper.enableDefaultTyping(DefaultTyping.NON_FINAL, As.PROPERTY);
+	//}
 	
 	/** */
+	Class<T> clazz;
 	byte[] secret;
 	long validDurationMillis;
 	
 	/** */
-	public SignatureRing(String secret, long validDurationMillis)
+	public SignatureRing(Class<T> clazz, String secret, long validDurationMillis)
 	{
+		this.clazz = clazz;
 		this.secret = Utils.getBytesUTF8(secret);
 		this.validDurationMillis = validDurationMillis;
 	}
@@ -44,23 +47,22 @@ public class SignatureRing<T>
 		int ind = encoded.lastIndexOf('|');
 		String sigHex = encoded.substring(ind+1);
 		
-		encoded = encoded.substring(0, ind);
+		String hashed = encoded.substring(0, ind);
 		
-		ind = encoded.lastIndexOf('|');
-		long timestamp = Long.parseLong(encoded.substring(ind+1));
+		ind = hashed.lastIndexOf('|');
+		long timestamp = Long.parseLong(hashed.substring(ind+1));
 		
-		encoded = encoded.substring(0, ind);
+		String json = hashed.substring(0, ind);
 		
 		byte[] sig = HexUtils.decode(sigHex);
-		byte[] mac = CryptoUtils.macHmacSHA256(encoded, secret);
+		byte[] mac = CryptoUtils.macHmacSHA256(hashed, secret);
 		
 		if (!Arrays.equals(sig, mac))
 			throw new IllegalArgumentException("Failed signature");
 		
-		@SuppressWarnings("unchecked")
-		T decoded = (T)mapper.fromJSON(encoded, Object.class);
+		T decoded = mapper.fromJSON(json, clazz);
 		
-		if (timestamp + validDurationMillis > System.currentTimeMillis())
+		if (timestamp + validDurationMillis < System.currentTimeMillis())
 			throw new IllegalArgumentException("Expired timestamp");
 		
 		return decoded;
