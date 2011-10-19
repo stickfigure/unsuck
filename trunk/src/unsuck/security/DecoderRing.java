@@ -1,79 +1,84 @@
 /*
- * $Id$
  */
 
 package unsuck.security;
 
-import java.io.IOException;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import org.apache.commons.codec.binary.Hex;
+
+import unsuck.io.HexUtils;
+import unsuck.lang.Utils;
+import unsuck.web.URLUtils;
 
 /**
- * Secret decoder ring which allows us to sign and verify the signature
- * of remote calls.
- * 
- * Depends on Jackson and DigestOutputStream (thus commons-codec).
+ * Decoder ring which allows us to sign and verify the signature of an arbitrary Map<String, String>.
+ * Doesn't hide the info, just signs it.
  * 
  * @author Jeff Schnitzer
  */
 public class DecoderRing
 {
 	/** */
-	protected SortedMap<String, Object> params = new TreeMap<String, Object>();
-	
-	/** Starts a decoder ring with a secret */
-	public DecoderRing(String secret)
-	{
-		this.params.put("_secret", secret);
-	}
+	private static final String TS_KEY = "_ts";
 	
 	/** */
-	public void setMethod(String name)
-	{
-		this.params.put("_method", name);
-	}
+	byte[] secret;
+	long validDurationMillis;
 	
-	/** Don't add a timestamp or signature */
-	public void addParam(String key, Object value)
+	/** */
+	public DecoderRing(String secret, long validDurationMillis)
 	{
-		this.params.put(key, value);
+		this.secret = Utils.getBytesUTF8(secret);
+		this.validDurationMillis = validDurationMillis;
 	}
-	
-	/** Create a signature for the given timestamp */
-	public String sign(long timestamp)
-	{
-		return this.digest(timestamp);
-	}
-	
-	/** Verify a signature, throwing IllegalArgumentException on failure */
-	public void verify(long timestamp, String signature) throws IllegalArgumentException
-	{
-		if (!signature.equals(this.digest(timestamp)))
-			throw new IllegalArgumentException("Bad signature");
-	}
-	
-	/**
-	 * @return the digest of this thing after adding timestamp
-	 */
-	private String digest(long timestamp)
-	{
-		if (this.params.containsKey("_timestamp"))
-			throw new IllegalStateException("You can only sign/verify once");
 
-		this.params.put("_timestamp", timestamp);
+	/**
+	 * Decode the value, ensuring that the signature and the timestamp are valid
+	 */
+	public Map<String, String> decode(String encoded) throws IllegalArgumentException {
+		// strip off the & at the end
+		int ind = encoded.lastIndexOf('&');
 		
-		// We turn this whole thing into a JSON representation and sign that
-		ObjectMapper mapper = new ObjectMapper();
-		DigestOutputStream digester = new DigestOutputStream("SHA1");
+		String sigHex = encoded.substring(ind+1);
+		String queryStr = encoded.substring(0, ind);
 		
-		try
-		{
-			mapper.writeValue(digester, this.params);
-		}
-		catch (IOException e) { throw new RuntimeException(e); }
+		byte[] sig = HexUtils.decode(sigHex);
 		
-		return digester.getDigestHex();
+		MessageDigest md = DigestUtils.createDigestSHA256();
+		md.update(secret);
+		byte[] digest = md.digest(queryStr.getBytes());
+		
+		if (!Arrays.equals(sig, digest))
+			throw new IllegalArgumentException("Failed signature");
+		
+		Map<String, String> decoded = URLUtils.parseQueryString(queryStr);
+		long timestamp = Long.parseLong(decoded.remove(TS_KEY));
+		
+		if (timestamp + validDurationMillis > System.currentTimeMillis())
+			throw new IllegalArgumentException("Expired timestamp");
+		
+		return decoded;
+	}
+	
+	/** 
+	 * @return a String which is NOT guaranteed to be web-safe 
+	 */
+	public String encode(Map<String, String> encodeMe) {
+		
+		// Let's not modify the original map
+		Map<String, Object> withTs = new HashMap<String, Object>(encodeMe);
+		withTs.put(TS_KEY, System.currentTimeMillis());
+		
+		String queryStr = URLUtils.buildQueryString(withTs);
+		
+		MessageDigest md = DigestUtils.createDigestSHA256();
+		md.update(secret);
+		byte[] digest = md.digest(queryStr.getBytes());
+			
+		return queryStr + '&' + Hex.encodeHexString(digest);
 	}
 }
