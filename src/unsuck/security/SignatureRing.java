@@ -3,7 +3,6 @@
 
 package unsuck.security;
 
-import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,7 @@ import unsuck.web.URLUtils;
 public class SignatureRing
 {
 	/** */
-	private static final String TS_KEY = "_ts";
+	private static final String TIMESTAMP_KEY = "_ts";
 	
 	/** */
 	byte[] secret;
@@ -47,16 +46,13 @@ public class SignatureRing
 		String queryStr = encoded.substring(0, ind);
 		
 		byte[] sig = HexUtils.decode(sigHex);
+		byte[] mac = CryptoUtils.macHmacSHA256(queryStr, secret);
 		
-		MessageDigest md = DigestUtils.createDigestSHA256();
-		md.update(secret);
-		byte[] digest = md.digest(queryStr.getBytes());
-		
-		if (!Arrays.equals(sig, digest))
+		if (!Arrays.equals(sig, mac))
 			throw new IllegalArgumentException("Failed signature");
 		
 		Map<String, String> decoded = URLUtils.parseQueryString(queryStr);
-		long timestamp = Long.parseLong(decoded.remove(TS_KEY));
+		long timestamp = Long.parseLong(decoded.remove(TIMESTAMP_KEY));
 		
 		if (timestamp + validDurationMillis > System.currentTimeMillis())
 			throw new IllegalArgumentException("Expired timestamp");
@@ -71,13 +67,11 @@ public class SignatureRing
 		
 		// Let's not modify the original map
 		Map<String, Object> withTs = new HashMap<String, Object>(encodeMe);
-		withTs.put(TS_KEY, System.currentTimeMillis());
+		withTs.put(TIMESTAMP_KEY, System.currentTimeMillis());
 		
 		String queryStr = URLUtils.buildQueryString(withTs);
 		
-		MessageDigest md = DigestUtils.createDigestSHA256();
-		md.update(secret);
-		byte[] digest = md.digest(queryStr.getBytes());
+		byte[] digest = CryptoUtils.macHmacSHA256(queryStr, secret);
 			
 		return queryStr + '&' + Hex.encodeHexString(digest);
 	}
