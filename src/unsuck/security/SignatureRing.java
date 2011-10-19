@@ -20,7 +20,7 @@ import unsuck.web.URLUtils;
  * 
  * @author Jeff Schnitzer
  */
-public class DecoderRing
+public class SignatureRing
 {
 	/** */
 	private static final String TS_KEY = "_ts";
@@ -30,7 +30,7 @@ public class DecoderRing
 	long validDurationMillis;
 	
 	/** */
-	public DecoderRing(String secret, long validDurationMillis)
+	public SignatureRing(String secret, long validDurationMillis)
 	{
 		this.secret = Utils.getBytesUTF8(secret);
 		this.validDurationMillis = validDurationMillis;
