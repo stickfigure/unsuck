@@ -7,6 +7,7 @@ package unsuck.web;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,24 +24,50 @@ public class URLUtils
 	 */
 	public static String buildURL(String base, Map<String, Object> params)
 	{
+		if (params == null || params.isEmpty())
+			return base;
+		else
+			return base + "?" + buildQueryString(params);
+	}
+
+	/**
+	 * Create a query string
+	 */
+	public static String buildQueryString(Map<String, Object> params)
+	{
 		StringBuilder bld = new StringBuilder();
-		bld.append(base);
 
-		if ((params != null) && !params.isEmpty())
+		boolean afterFirst = false;
+		for (Map.Entry<String, Object> entry: params.entrySet())
 		{
-			boolean useAmpersand = false;
-			for (Map.Entry<String, Object> entry: params.entrySet())
-			{
-				bld.append(useAmpersand ? "&" : "?");
-				useAmpersand = true;
+			if (afterFirst)
+				bld.append("&");
+			else
+				afterFirst = true;
 
-				bld.append(urlEncode(entry.getKey()));
-				bld.append("=");
-				bld.append(urlEncode(entry.getValue()));
-			}
+			bld.append(urlEncode(entry.getKey()));
+			bld.append("=");
+			bld.append(urlEncode(entry.getValue()));
 		}
 
 		return bld.toString();
+	}
+
+	/**
+	 * Parse a query string.
+	 */
+	public static LinkedHashMap<String, String> parseQueryString(String queryString)
+	{
+		LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+		
+		String[] pairs = queryString.split("&");
+		
+		for (String pairStr: pairs) {
+			String[] pair = pairStr.split("=");
+			result.put(urlDecode(pair[0]), urlDecode(pair[1]));
+		}
+
+		return result;
 	}
 
 	/**
