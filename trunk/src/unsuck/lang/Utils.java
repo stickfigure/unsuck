@@ -18,6 +18,11 @@ public class Utils
 		return (o1 == o2) || ((o1 != null) && o1.equals(o2));
 	}
 
+	/** Compare two longs */
+	public static int compare(long l1, long l2) {
+		return (l1 == l2) ? 0 : (l1 < l2) ? -1 : 1;
+	}
+	
 	/**
 	 * Throws exception if value is null or empty or whitespace
 	 */
