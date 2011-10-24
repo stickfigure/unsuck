@@ -14,8 +14,10 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class EncoderRing<T> extends SignatureRing<T>
 {
-	/** */
-	public EncoderRing(Class<T> clazz, String secret, long validDurationMillis)
+	/**
+	 * @param secret needs to be exactly 16 bytes in length
+	 */
+	public EncoderRing(Class<T> clazz, byte[] secret, long validDurationMillis)
 	{
 		super(clazz, secret, validDurationMillis);
 	}
@@ -25,7 +27,7 @@ public class EncoderRing<T> extends SignatureRing<T>
 	 */
 	public T decode(String encoded) throws IllegalArgumentException {
 		byte[] encrypted = Base64.decodeBase64(encoded);
-		String unencrypted = CryptoUtils.decryptAESCBC(encrypted, secret);
+		String unencrypted = CryptoUtils.decryptAES(encrypted, secret);
 		return super.decode(unencrypted);
 	}
 	
@@ -34,7 +36,7 @@ public class EncoderRing<T> extends SignatureRing<T>
 	 */
 	public String encode(T encodeMe) {
 		String unencrypted = super.encode(encodeMe);
-		byte[] encrypted = CryptoUtils.encryptAESCBC(unencrypted, secret);
+		byte[] encrypted = CryptoUtils.encryptAES(unencrypted, secret);
 		return Base64.encodeBase64URLSafeString(encrypted);
 	}
 }

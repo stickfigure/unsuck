@@ -9,7 +9,6 @@ import org.apache.commons.codec.binary.Hex;
 
 import unsuck.io.HexUtils;
 import unsuck.json.BetterObjectMapper;
-import unsuck.lang.Utils;
 
 /**
  * Decoder ring which allows us to sign and verify the signature of an arbitrary object.
@@ -37,10 +36,10 @@ public class SignatureRing<T>
 	long validDurationMillis;
 	
 	/** */
-	public SignatureRing(Class<T> clazz, String secret, long validDurationMillis)
+	public SignatureRing(Class<T> clazz, byte[] secret, long validDurationMillis)
 	{
 		this.clazz = clazz;
-		this.secret = Utils.getBytesUTF8(secret);
+		this.secret = secret;
 		this.validDurationMillis = validDurationMillis;
 	}
 
