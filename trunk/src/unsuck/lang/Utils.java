@@ -84,4 +84,22 @@ public class Utils
 	{
 		return getBytes(str, "UTF-8");
 	}
+
+	/**
+	 * Without the stupid exception
+	 */
+	public static String newString(byte[] bytes, String encoding)
+	{
+		try { return new String(bytes, encoding); }
+		catch (UnsupportedEncodingException ex) { throw new RuntimeException(ex); }
+	}
+	
+	/**
+	 * Without the stupid exception
+	 */
+	public static String newStringUTF8(byte[] bytes)
+	{
+		return newString(bytes, "UTF-8");
+	}
+	
 }
