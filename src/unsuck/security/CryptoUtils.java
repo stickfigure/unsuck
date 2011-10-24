@@ -3,10 +3,12 @@
 
 package unsuck.security;
 
+import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -61,5 +63,37 @@ public class CryptoUtils
 		catch (InvalidKeyException ex) { throw new RuntimeException(ex); }
 		
 		return mac.doFinal(Utils.getBytesUTF8(msg));
+	}
+	
+	/** */
+	public static byte[] encryptAESCBC(String msg, byte[] secret) {
+		return encrypt(msg, secret, "AES/CBC");
+	}
+	
+	/** */
+	public static byte[] encrypt(String msg, byte[] secret, String algorithm) {
+		try {
+			Cipher c = Cipher.getInstance(algorithm);
+			c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secret, algorithm));
+			return c.doFinal(Utils.getBytesUTF8(msg));
+		} catch (GeneralSecurityException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	/** */
+	public static String decryptAESCBC(byte[] cipherText, byte[] secret) {
+		return decrypt(cipherText, secret, "AES/CBC");
+	}
+	
+	/** */
+	public static String decrypt(byte[] cipherText, byte[] secret, String algorithm) {
+		try {
+			Cipher c = Cipher.getInstance(algorithm);
+			c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secret, algorithm));
+			return Utils.newStringUTF8(c.doFinal(cipherText));
+		} catch (GeneralSecurityException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 }
