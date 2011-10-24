@@ -5,12 +5,16 @@ package unsuck.security;
 
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import unsuck.lang.Utils;
@@ -22,6 +26,9 @@ import unsuck.lang.Utils;
  */
 public class CryptoUtils
 {
+	/** */
+	private static SecureRandom RANDOM = new SecureRandom();
+	
 	/** Masks the annoying exceptions */
 	public static MessageDigest createDigestSHA256() {
 		return createDigest("SHA-256");
@@ -65,32 +72,47 @@ public class CryptoUtils
 		return mac.doFinal(Utils.getBytesUTF8(msg));
 	}
 	
-	/** */
-	public static byte[] encryptAESCBC(String msg, byte[] secret) {
-		return encrypt(msg, secret, "AES/CBC");
+	/**
+	 * Encrypts with a random IV that is prepended to the result 
+	 */
+	public static byte[] encryptAES(String msg, byte[] secret) {
+		byte[] iv = new byte[16];
+		RANDOM.nextBytes(iv);
+
+		byte[] cipherText = encrypt(msg, new SecretKeySpec(secret, "AES"), iv, "AES/CBC/PKCS5Padding");
+		
+		byte[] both = new byte[iv.length + cipherText.length];
+		System.arraycopy(iv, 0, both, 0, iv.length);
+		System.arraycopy(cipherText, 0, both, iv.length, cipherText.length);
+		
+		return both;
 	}
 	
 	/** */
-	public static byte[] encrypt(String msg, byte[] secret, String algorithm) {
+	public static byte[] encrypt(String msg, Key secret, byte[] iv, String algorithm) {
 		try {
 			Cipher c = Cipher.getInstance(algorithm);
-			c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secret, algorithm));
+			c.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(iv));
 			return c.doFinal(Utils.getBytesUTF8(msg));
 		} catch (GeneralSecurityException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	/** */
-	public static String decryptAESCBC(byte[] cipherText, byte[] secret) {
-		return decrypt(cipherText, secret, "AES/CBC");
+	/** 
+	 * Expects that an IV is at the beginning (built with encryptAES())
+	 */
+	public static String decryptAES(byte[] cipherText, byte[] secret) {
+		byte[] iv = Arrays.copyOfRange(cipherText, 0, 16);
+		byte[] text = Arrays.copyOfRange(cipherText, 16, cipherText.length);
+		return decrypt(text, new SecretKeySpec(secret, "AES"), iv, "AES/CBC/PKCS5Padding");
 	}
 	
 	/** */
-	public static String decrypt(byte[] cipherText, byte[] secret, String algorithm) {
+	public static String decrypt(byte[] cipherText, Key secret, byte[] iv, String algorithm) {
 		try {
 			Cipher c = Cipher.getInstance(algorithm);
-			c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secret, algorithm));
+			c.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
 			return Utils.newStringUTF8(c.doFinal(cipherText));
 		} catch (GeneralSecurityException ex) {
 			throw new RuntimeException(ex);
