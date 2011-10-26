@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
+ * Don't use this.  Use BCrypt instead.
+ * 
  * Tool which securely generates and validates password hashes using an
  * algorithm you specify and a random per-password salt.
  * 
@@ -18,6 +20,7 @@ import java.util.Random;
  * 
  * @author Jeff Schnitzer
  */
+@Deprecated
 public class PasswordHasher
 {
 	/** Number of bytes for the salt */
