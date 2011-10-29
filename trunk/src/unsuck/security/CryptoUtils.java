@@ -17,7 +17,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import unsuck.lang.Utils;
+import unsuck.lang.StringUtils2;
 
 /**
  * Some static methods to help working with MessageDigest
@@ -69,7 +69,7 @@ public class CryptoUtils
 		try { mac.init(createSecretKeyHmacSHA256(secret)); }
 		catch (InvalidKeyException ex) { throw new RuntimeException(ex); }
 		
-		return mac.doFinal(Utils.getBytesUTF8(msg));
+		return mac.doFinal(StringUtils2.getBytesUTF8(msg));
 	}
 	
 	/**
@@ -93,7 +93,7 @@ public class CryptoUtils
 		try {
 			Cipher c = Cipher.getInstance(algorithm);
 			c.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(iv));
-			return c.doFinal(Utils.getBytesUTF8(msg));
+			return c.doFinal(StringUtils2.getBytesUTF8(msg));
 		} catch (GeneralSecurityException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -113,7 +113,7 @@ public class CryptoUtils
 		try {
 			Cipher c = Cipher.getInstance(algorithm);
 			c.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
-			return Utils.newStringUTF8(c.doFinal(cipherText));
+			return StringUtils2.newStringUTF8(c.doFinal(cipherText));
 		} catch (GeneralSecurityException ex) {
 			throw new RuntimeException(ex);
 		}
