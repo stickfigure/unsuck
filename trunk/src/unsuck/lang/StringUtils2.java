@@ -48,7 +48,7 @@ public class StringUtils2
 		
 		String[] tokens = name.toLowerCase().split(" ");
 		for (String token: tokens)
-			for (int i=0; i<token.length(); i++)
+			for (int i=1; i<=token.length(); i++)
 				into.add(token.substring(0, i));
 		
 		return into;
