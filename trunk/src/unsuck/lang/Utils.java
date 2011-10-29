@@ -35,10 +35,23 @@ public class Utils
 	/**
 	 * Splits name into words. Normalizes to lower case.
 	 */
-	public static void breakdown(String name, Set<String> words)
+	public static void breakdownWords(String name, Set<String> into)
 	{
 		String[] tokens = name.toLowerCase().split(" ");
-		words.addAll(Arrays.asList(tokens));
+		into.addAll(Arrays.asList(tokens));
+	}
+	
+	/**
+	 * Splits name into words, and then fragments. Normalizes to lower case.
+	 * For example, the string "Foo Bar" would become:
+	 * "f", "fo", "foo", "b", "ba", "bar"
+	 */
+	public static void breakdownFragments(String name, Set<String> into)
+	{
+		String[] tokens = name.toLowerCase().split(" ");
+		for (String token: tokens)
+			for (int i=0; i<token.length(); i++)
+				into.add(token.substring(0, i));
 	}
 	
 	/**
