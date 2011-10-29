@@ -2,6 +2,7 @@ package unsuck.lang;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -11,21 +12,29 @@ import java.util.Set;
 public class StringUtils2
 {
 	/**
-	 * Throws exception if value is null or empty or whitespace
+	 * Throws exception if value is null or empty or whitespace.
+	 * @return the trimmed, safe version of the string
 	 */
-	public static void requireNotBlank(String value)
+	public static String requireNotBlank(String value)
 	{
-		if ((value == null) || (value.trim().length() == 0))
+		if (value == null)
 			throw new IllegalArgumentException("Value cannot be null");
+
+		value = value.trim();
+		
+		if (value.length() == 0)
+			throw new IllegalArgumentException("Value cannot be blank");
+		
+		return value;
 	}
 
 	/**
 	 * Splits name into words. Normalizes to lower case.
 	 */
-	public static void breakdownWords(String name, Set<String> into)
+	public static Set<String> breakdownWords(String name)
 	{
 		String[] tokens = name.toLowerCase().split(" ");
-		into.addAll(Arrays.asList(tokens));
+		return new HashSet<String>(Arrays.asList(tokens));
 	}
 	
 	/**
@@ -33,12 +42,16 @@ public class StringUtils2
 	 * For example, the string "Foo Bar" would become:
 	 * "f", "fo", "foo", "b", "ba", "bar"
 	 */
-	public static void breakdownFragments(String name, Set<String> into)
+	public static Set<String> breakdownFragments(String name)
 	{
+		Set<String> into = new HashSet<String>(name.length() * 2);
+		
 		String[] tokens = name.toLowerCase().split(" ");
 		for (String token: tokens)
 			for (int i=0; i<token.length(); i++)
 				into.add(token.substring(0, i));
+		
+		return into;
 	}
 	
 	/**
