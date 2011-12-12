@@ -6,6 +6,7 @@ package unsuck.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -34,5 +35,17 @@ public class ListUtils
 			
 			return list;
 		}
+	}
+	
+	/**
+	 * Gets the index item out of an iterable collection just by iterating.  Not cheap, but handy.
+	 */
+	public static <T> T get(Iterable<T> coll, int index)
+	{
+		Iterator<T> it = coll.iterator();
+		for (int i=0; i<index; i++)
+			it.next();
+		
+		return it.next();
 	}
 }
