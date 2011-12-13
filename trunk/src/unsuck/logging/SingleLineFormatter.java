@@ -1,4 +1,4 @@
-package unsuck.lang;
+package unsuck.logging;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
