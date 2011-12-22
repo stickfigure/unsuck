@@ -3,6 +3,8 @@
 
 package unsuck.logging;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
@@ -45,6 +47,18 @@ public class ReallySimpleFormatter extends SimpleFormatter
 
 		// Newline
 		bld.append('\n');
+
+		// If there is an exception, add it
+		if (record.getThrown() != null) {
+			try {
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				record.getThrown().printStackTrace(pw);
+				pw.close();
+				bld.append(sw.toString());
+			} catch (Exception ex) {
+			}
+		}
 		
 		return bld.toString();
 	}
