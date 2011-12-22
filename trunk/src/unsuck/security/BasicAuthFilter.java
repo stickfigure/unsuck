@@ -79,6 +79,8 @@ abstract public class BasicAuthFilter extends AbstractFilter
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
+		boolean good = false;
+		
 		try
 		{
 			String authorization = request.getHeader("Authorization");
@@ -91,8 +93,7 @@ abstract public class BasicAuthFilter extends AbstractFilter
 				
 				if (this.authenticate(authParts[0], authParts[1]))
 				{
-					chain.doFilter(request, response);
-					return;
+					good = true;
 				}
 				else
 				{
@@ -112,8 +113,15 @@ abstract public class BasicAuthFilter extends AbstractFilter
 				log.warn("Error trying to parse authorization header", ex);
 		}
 
-		// return auth required
-		response.addHeader("WWW-Authenticate", this.authenticateHeader);
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+		if (good)
+		{
+			chain.doFilter(request, response);
+		}
+		else
+		{
+			// return auth required
+			response.addHeader("WWW-Authenticate", this.authenticateHeader);
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+		}
 	}
 }
