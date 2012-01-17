@@ -21,10 +21,10 @@ public class StringUtils2
 			throw new IllegalArgumentException("Value cannot be null");
 
 		value = value.trim();
-		
+
 		if (value.length() == 0)
 			throw new IllegalArgumentException("Value cannot be blank");
-		
+
 		return value;
 	}
 
@@ -36,7 +36,7 @@ public class StringUtils2
 		String[] tokens = name.toLowerCase().split(" ");
 		return new HashSet<String>(Arrays.asList(tokens));
 	}
-	
+
 	/**
 	 * Splits name into words, and then fragments. Normalizes to lower case.
 	 * For example, the string "Foo Bar" would become:
@@ -45,15 +45,15 @@ public class StringUtils2
 	public static Set<String> breakdownFragments(String name)
 	{
 		Set<String> into = new HashSet<String>(name.length() * 2);
-		
+
 		String[] tokens = name.toLowerCase().split(" ");
 		for (String token: tokens)
 			for (int i=1; i<=token.length(); i++)
 				into.add(token.substring(0, i));
-		
+
 		return into;
 	}
-	
+
 	/**
 	 * Takes a normal string and turns it into something suitable for a title in a URL.
 	 * This is all about SEO.  Basically, spaces go to dash and anything that isn't
@@ -63,24 +63,29 @@ public class StringUtils2
 	{
 		if (title == null)
 			return "";
-		
+
 		StringBuilder bld = new StringBuilder();
-		
+
 		for (int i=0; i<title.length(); i++)
 		{
 			char ch = title.charAt(i);
-			
+
 			if (Character.isWhitespace(ch))
 				bld.append('-');
 			else if (Character.isLetterOrDigit(ch))
 				bld.append(ch);
-			
+
 			// otherwise skip
 		}
-		
-		return bld.toString();
+
+		// Strip out any extra -'s that might get generated
+		String dedup = bld.toString().replaceAll("-+", "-");
+		if (dedup.charAt(dedup.length() - 1) == '-') {
+			return dedup.substring(0, dedup.length() - 1);
+		}
+		return dedup;
 	}
-	
+
 	/**
 	 * Without the stupid exception
 	 */
@@ -89,7 +94,7 @@ public class StringUtils2
 		try { return str.getBytes(encoding); }
 		catch (UnsupportedEncodingException ex) { throw new RuntimeException(ex); }
 	}
-	
+
 	/**
 	 * Without the stupid exception
 	 */
@@ -106,7 +111,7 @@ public class StringUtils2
 		try { return new String(bytes, encoding); }
 		catch (UnsupportedEncodingException ex) { throw new RuntimeException(ex); }
 	}
-	
+
 	/**
 	 * Without the stupid exception
 	 */
@@ -114,5 +119,5 @@ public class StringUtils2
 	{
 		return newString(bytes, "UTF-8");
 	}
-	
+
 }
