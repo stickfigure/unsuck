@@ -24,4 +24,11 @@ public class Safe
 	public static <T> boolean contains(Collection<T> coll, T element) {
 		return coll.contains(element);
 	}
+	
+	/**
+	 * Collection.remove() but with type safety.
+	 */
+	public static <T> boolean remove(Collection<T> coll, T element) {
+		return coll.remove(element);
+	}
 }
