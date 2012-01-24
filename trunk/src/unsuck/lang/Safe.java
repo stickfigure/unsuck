@@ -1,6 +1,7 @@
 package unsuck.lang;
 
 import java.util.Collection;
+import java.util.Map;
 
 
 
@@ -30,5 +31,19 @@ public class Safe
 	 */
 	public static <T> boolean remove(Collection<T> coll, T element) {
 		return coll.remove(element);
+	}
+	
+	/**
+	 * Map.remove() but with type safety.
+	 */
+	public static <K, V> V remove(Map<K, V> map, K key) {
+		return map.remove(key);
+	}
+	
+	/**
+	 * Map.get() but with type safety.
+	 */
+	public static <K, V> V get(Map<K, V> map, K key) {
+		return map.get(key);
 	}
 }
