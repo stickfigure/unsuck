@@ -1,9 +1,9 @@
 package unsuck.gae;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-
 import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.inject.Injector;
@@ -16,24 +16,24 @@ import com.google.inject.Injector;
 abstract public class GuicyDeferredTask implements DeferredTask
 {
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = LoggerFactory.getLogger(GuicyDeferredTask.class);
 
 	private static @Inject Injector injector;
 	
-	/** Inject ourselves when the object is reconstituted from serialization */
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		in.defaultReadObject();
-		
-		injector.injectMembers(this);
+	/** Perform guice injection and then continue */
+	@Override
+	public final void run()
+	{
+		try {
+			log.debug("Executing task " + this);
+	    	injector.injectMembers(this);
+	    	this.run2();
+		} catch (RuntimeException ex) {
+			log.error("Error executing task " + this, ex);
+			throw ex;
+		}
 	}
 	
-//	/** Perform guice injection and then continue */
-//	@Override
-//	public final void run()
-//	{
-//    	injector.injectMembers(this);
-//    	this.run2();
-//	}
-//	
-//	/** Implement this instead of run(), executed after guice injection */
-//	abstract public void run2();
+	/** Implement this instead of run(), executed after guice injection */
+	abstract public void run2();
 }
