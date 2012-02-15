@@ -21,7 +21,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  * Register this provider and you can return String properly.
  */
 @Provider
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, MediaTypeUTF8.APPLICATION_JSON})
 public class StringJacksonProvider implements MessageBodyWriter<String>
 {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
