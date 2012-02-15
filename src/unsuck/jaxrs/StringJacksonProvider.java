@@ -16,7 +16,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 /**
  * This fixes what I interpret as broken behavior in Resteasy. For some stupid
  * reason, Resteasy refuses to JSON encode Strings returned from methods that
- * @Produces(MediaType.APPLICATION_JSON).
+ * @Produces(MediaType.APPLICATION_JSON) or the UTF variant.
  * 
  * Register this provider and you can return String properly.
  */
@@ -29,7 +29,7 @@ public class StringJacksonProvider implements MessageBodyWriter<String>
 	@Override
 	public boolean isWriteable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType)
 	{
-		return MediaType.APPLICATION_JSON_TYPE.equals(mediaType) && aClass == String.class;
+		return MediaType.APPLICATION_JSON_TYPE.getType().equals(mediaType.getType()) && aClass == String.class;
 	}
 
 	/**
