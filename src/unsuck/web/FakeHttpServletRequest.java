@@ -60,4 +60,10 @@ public class FakeHttpServletRequest extends HttpServletRequestWrapper
 	{
 		attrs.remove(key);
 	}
+	
+	@Override
+	public String getRemoteAddr()
+	{
+		return "127.0.0.1";
+	}
 }
