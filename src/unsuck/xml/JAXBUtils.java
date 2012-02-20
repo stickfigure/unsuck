@@ -20,11 +20,9 @@ public class JAXBUtils
 	 * Unmarshal the stream to an object 
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T unmarshal(Class<T> docClass, InputStream inputStream) throws JAXBException {
-		String packageName = docClass.getPackage().getName();
-		JAXBContext jc = JAXBContext.newInstance(packageName);
+	public static <T> T unmarshal(Class<T> clazz, InputStream inputStream) throws JAXBException {
+		JAXBContext jc = JAXBContext.newInstance(clazz);
 		Unmarshaller u = jc.createUnmarshaller();
-		
 		return (T)u.unmarshal(inputStream);
 	}
 }
