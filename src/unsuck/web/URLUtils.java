@@ -5,12 +5,16 @@
 package unsuck.web;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import unsuck.io.BetterIOException;
 
 /**
  * Some basic utilities for manipulating urls.
@@ -108,5 +112,16 @@ public class URLUtils
 		}
 
 		return url.toString();
+	}
+	
+	/**
+	 * Create a url without the annoying checked exceptions
+	 */
+	public static URL newURL(String url) {
+		try {
+			return new URL(url);
+		} catch (MalformedURLException ex) {
+			throw new BetterIOException(ex);
+		}
 	}
 }
