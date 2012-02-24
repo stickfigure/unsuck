@@ -12,6 +12,21 @@ import java.util.Set;
 public class StringUtils2
 {
 	/**
+	 * Returns a trimmed string or null if trimming produces an empty string.  Also produces null if input is null.
+	 */
+	public static String trimToNull(String value) {
+		if (value == null)
+			return null;
+		
+		value = value.trim();
+		
+		if (value.isEmpty())
+			return null;
+		else
+			return value;
+	}
+	
+	/**
 	 * Throws exception if value is null or empty or whitespace.
 	 * @return the trimmed, safe version of the string
 	 */
