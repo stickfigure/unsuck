@@ -34,14 +34,16 @@ public class TimingFilter extends AbstractFilter
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
-		long time = System.currentTimeMillis();
-		
-		chain.doFilter(request, response);
-		
-		if (log.isDebugEnabled()) {
+		if (log.isDebugEnabled() && request.getAttribute("javax.servlet.forward.request_uri") == null) {
+			long time = System.currentTimeMillis();
+			
+			chain.doFilter(request, response);
+			
 			long elapsed = System.currentTimeMillis() - time;
 			float seconds = (float)elapsed / 1000f;
 			log.debug(FORMAT.format(seconds) + " seconds");
+		} else {
+			chain.doFilter(request, response);
 		}
 	}
 }
