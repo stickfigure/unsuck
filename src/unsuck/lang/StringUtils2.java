@@ -1,7 +1,7 @@
 package unsuck.lang;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,25 +44,15 @@ public class StringUtils2
 	}
 
 	/**
-	 * Splits name into words. Normalizes to lower case.
-	 */
-	public static Set<String> breakdownWords(String name)
-	{
-		String[] tokens = name.toLowerCase().split(" ");
-		return new HashSet<String>(Arrays.asList(tokens));
-	}
-
-	/**
-	 * Splits name into words, and then fragments. Normalizes to lower case.
-	 * For example, the string "Foo Bar" would become:
+	 * Splits names into fragments.  Does not modify case.
+	 * For example, the strings ["foo", "bar"] would become:
 	 * "f", "fo", "foo", "b", "ba", "bar"
 	 */
-	public static Set<String> breakdownFragments(String name)
+	public static Set<String> breakdownFragments(Collection<String> names)
 	{
-		Set<String> into = new HashSet<String>(name.length() * 2);
+		Set<String> into = new HashSet<String>(100);
 
-		String[] tokens = name.toLowerCase().split(" ");
-		for (String token: tokens)
+		for (String token: names)
 			for (int i=1; i<=token.length(); i++)
 				into.add(token.substring(0, i));
 
