@@ -64,4 +64,17 @@ public class ReflectionUtils
 	public static Object getFieldValue(Object obj, String fieldName) {
 		return fieldGet(getField(obj.getClass(), fieldName), obj);
 	}
+	
+	/**
+	 * Invokes a simple method on the object, no parameters.
+	 * No checked exceptions.  LAME.
+	 */
+	public static Object invokeMethod(Object obj, String method) {
+		try
+		{
+			return obj.getClass().getMethod(method).invoke(obj);
+		}
+		catch (RuntimeException ex) { throw ex; }
+		catch (Exception ex) { throw new RuntimeException(ex); }
+	}
 }
