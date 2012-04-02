@@ -15,11 +15,11 @@ public class FlagsString
 {
 	List<String> flags;
 	
-	public void add(String flag) {
+	public void add(Object flag) {
 		if (flags == null)
 			flags = Lists.newArrayList();
 		
-		flags.add(flag);
+		flags.add(flag.toString());
 	}
 	
 	public String toString() {
