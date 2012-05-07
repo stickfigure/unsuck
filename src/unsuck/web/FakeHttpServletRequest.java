@@ -66,4 +66,9 @@ public class FakeHttpServletRequest extends HttpServletRequestWrapper
 	{
 		return "127.0.0.1";
 	}
+	
+	@Override
+	public String getHeader(String name) {
+		return null;
+	}
 }
