@@ -19,4 +19,21 @@ public class Utils
 	public static int compare(long l1, long l2) {
 		return (l1 == l2) ? 0 : (l1 < l2) ? -1 : 1;
 	}
+	
+	/** Try to parse the string into a number; any failure simply produces null */
+	public static Long parseLongSafe(String str) {
+		if (str == null)
+			return null;
+			
+		str = str.trim();
+		
+		if (str.length() == 0)
+			return null;
+		
+		try {
+			return Long.parseLong(str);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
 }
