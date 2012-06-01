@@ -8,10 +8,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.appengine.api.memcache.ErrorHandlers;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheService.IdentifiableValue;
@@ -49,6 +51,7 @@ public class Cache<K, V>
 	public Cache(String namespace)
 	{
 		this.memCache = MemcacheServiceFactory.getMemcacheService(namespace);
+		this.memCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.SEVERE));
 	}
 	
 	/** Create cache with explicit namespace and an expiration period */
