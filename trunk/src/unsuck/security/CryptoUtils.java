@@ -17,6 +17,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Hex;
+
 import unsuck.lang.StringUtils2;
 
 /**
@@ -70,6 +72,11 @@ public class CryptoUtils
 		catch (InvalidKeyException ex) { throw new RuntimeException(ex); }
 		
 		return mac.doFinal(StringUtils2.getBytesUTF8(msg));
+	}
+	
+	/** Create the mac code for a message and secret, encoding it as hex */
+	public static String macHmacSHA256Hex(String msg, byte[] secret) {
+		return Hex.encodeHexString(macHmacSHA256(msg, secret));
 	}
 	
 	/**
