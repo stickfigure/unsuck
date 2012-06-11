@@ -18,6 +18,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import unsuck.io.BetterIOException;
 import unsuck.web.AbstractFilter;
 
 
@@ -37,6 +38,9 @@ abstract public class BasicAuthFilter extends AbstractFilter
 	/** */
 	private final static Logger log = LoggerFactory.getLogger(BasicAuthFilter.class);
 	
+	/** The header name for authorization */
+	public static final String AUTH_HEADER = "Authorization";
+	
 	/** */
 	String authenticateHeader;
 	
@@ -46,9 +50,8 @@ abstract public class BasicAuthFilter extends AbstractFilter
 	/** @return true if the username/pw combo are valid */
 	abstract public boolean authenticate(String username, String password);
 	
-	/** Useful tool:  Add http basic auth credentials to a connection */
-	public static void addBasicAuth(URLConnection conn, String username, String password)
-	{
+	/** Create the authorization header value */
+	public static String authHeader(String username, String password) {
 		try
 		{
 			StringBuilder buf = new StringBuilder(username).append(':').append(password);
@@ -57,13 +60,19 @@ abstract public class BasicAuthFilter extends AbstractFilter
 			byte[] bytes = buf.toString().getBytes("utf-8");
 
 			// Watch out, Base64.encodeBase64String puts a fatal CRLF at the end
-			String header = "Basic " + new String(Base64.encodeBase64(bytes), "utf-8");	// really ascii
-			conn.setRequestProperty("Authorization", header);
-			
-			if (log.isDebugEnabled())
-				log.debug("Authorization header is: " + header);
+			return "Basic " + new String(Base64.encodeBase64(bytes), "utf-8");	// really ascii
 		}
-		catch (UnsupportedEncodingException ex) { throw new RuntimeException(ex); }
+		catch (UnsupportedEncodingException ex) { throw new BetterIOException(ex); }
+	}
+	
+	/** Useful tool:  Add http basic auth credentials to a connection */
+	public static void addBasicAuth(URLConnection conn, String username, String password)
+	{
+		String header = authHeader(username, password);
+		conn.setRequestProperty(AUTH_HEADER, header);
+		
+		if (log.isDebugEnabled())
+			log.debug("Authorization header is: " + header);
 	}
 
 	/** */
