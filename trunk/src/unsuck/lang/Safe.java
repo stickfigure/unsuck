@@ -18,6 +18,16 @@ public class Safe
 	public static <T> boolean equals(T o1, T o2) {
 		return (o1 == o2) || ((o1 != null) && o1.equals(o2));
 	}
+	
+	/**
+	 * Adds and checks for null.
+	 */
+	public static <T> boolean addNotNull(Collection<T> coll, T element) {
+		if (element == null)
+			throw new NullPointerException();
+		
+		return coll.add(element);
+	}
 
 	/**
 	 * Collection.contains() but with type safety. 
