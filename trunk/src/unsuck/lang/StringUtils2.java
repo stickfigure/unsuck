@@ -125,4 +125,11 @@ public class StringUtils2
 		return newString(bytes, "UTF-8");
 	}
 
+	/**
+	 * Adds "\ufffd" to the string, creating a trailing boundary for a leading search.
+	 * Ie, if you want everything that starts with "foo", you filter value >= "foo" and value <= "foo\ufffd"
+	 */
+	public static String makeFilterTail(String input) {
+		return input + "\ufffd";
+	}
 }
