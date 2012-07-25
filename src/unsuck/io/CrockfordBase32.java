@@ -87,6 +87,8 @@ public class CrockfordBase32 {
 			case 'T':
 			case 't': return 26;
 			
+			case 'U':
+			case 'u':
 			case 'V':
 			case 'v': return 27;
 			
@@ -160,6 +162,8 @@ public class CrockfordBase32 {
 		tryout(100);
 		tryout(12345);
 		tryout(47001);
+		
+		System.out.println("2RVV is " + decode("2RVV"));
 	}
 	
 	private static void tryout(long num) {
