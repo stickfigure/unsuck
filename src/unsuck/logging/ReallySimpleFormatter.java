@@ -9,7 +9,8 @@ import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
 /**
- * A formatter that makes it easier to read log messages
+ * A formatter that makes it easier to read log messages.
+ * From https://code.google.com/p/unsuck/
  * 
  * @author Jeff Schnitzer <jeff@infohazard.org>
  */
