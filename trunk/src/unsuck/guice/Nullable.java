@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 /**
  * Guice will recognize this and allow null injection.  Any annotation named "Nullable" is magic.
  */
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Nullable {}
