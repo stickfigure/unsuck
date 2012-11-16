@@ -4,6 +4,7 @@
 package unsuck.test;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -105,5 +106,35 @@ public class FailSafeLinkedCollectionTests
 		assert it3.hasNext();
 		assert it3.next().equals(FOO);
 		assert !it3.hasNext();
+	}
+
+	/** */
+	@Test
+	public void removeThenAdd() throws Exception {
+		list.add(FOO);
+		assert list.size() == 1;
+
+		Iterator<String> it = list.iterator();
+		it.next();
+		it.remove();
+		assert list.size() == 0;
+
+		list.add(BAR);
+		assert list.size() == 1;
+
+		Iterator<String> it2 = list.iterator();
+		assert it2.next().equals(BAR);
+		assert !it2.hasNext();
+	}
+
+	/** */
+	@Test
+	public void shuffle() throws Exception {
+		list.add(FOO);
+		list.add(BAR);
+		assert list.size() == 2;
+
+		list.shuffle(new Random());
+		assert list.size() == 2;
 	}
 }
