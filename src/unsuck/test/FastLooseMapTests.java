@@ -1,6 +1,4 @@
 /*
- * $Id: BeanMixin.java 1075 2009-05-07 06:41:19Z lhoriman $
- * $URL: https://subetha.googlecode.com/svn/branches/resin/rtest/src/org/subethamail/rtest/util/BeanMixin.java $
  */
 
 package unsuck.test;
@@ -24,14 +22,14 @@ public class FastLooseMapTests
 	private static Logger log = LoggerFactory.getLogger(FastLooseMapTests.class);
 
 	FastLooseMap<Integer, String> map;
-	
+
 	/** */
 	@BeforeMethod
 	public void setUp() throws Exception
 	{
 		this.map = new FastLooseMap<Integer, String>();
 	}
-	
+
 	/** */
 	@AfterMethod
 	public void tearDown() throws Exception
@@ -45,7 +43,7 @@ public class FastLooseMapTests
 	{
 		map.put(1, "one");
 		map.put(2, "two");
-		
+
 		assert map.size() == 2;
 		assert map.get(1).equals("one");
 		assert map.get(2).equals("two");
@@ -57,10 +55,10 @@ public class FastLooseMapTests
 	{
 		map.put(1, "one");
 		map.put(2, "two");
-		
+
 		map.remove(1);
 		map.remove(2);
-		
+
 		assert map.size() == 0;
 	}
 }
