@@ -59,6 +59,10 @@ public class FailSafeLinkedCollection<E> extends AbstractCollection<E> {
 		@Override
 		public void remove() {
 			last.next = last.next.next;
+
+			if (here == tail)
+				tail = last;
+
 			size--;
 		}
 
