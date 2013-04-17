@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class BetterObjectMapper extends ObjectMapper
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Converts the object to a JSON string
 	 */
@@ -58,5 +60,5 @@ public class BetterObjectMapper extends ObjectMapper
 		catch (Exception ex) { throw new RuntimeException(ex); }
 	}
 
-	
+
 }
