@@ -3,8 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/lombok.jar"/>
-	<classpathentry kind="lib" path="lib/build-only/testng-5.9-jdk15.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/hessian-4.0.14.jar" sourcepath="/Resin/modules/hessian/src"/>
@@ -24,5 +22,6 @@
 	<classpathentry kind="lib" path="lib/guava-11.0.2.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
