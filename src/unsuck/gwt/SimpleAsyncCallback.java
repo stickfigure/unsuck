@@ -6,6 +6,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 
 /**
+ * I'm not quite sure how this ended up here, since GWT needs source in the jar and the build
+ * system was never set up to do that.  So this is useless.
+ *
  * This handler takes care of errors by simply raising a message box,
  * leaving you to implement onSuccess().  Override failed() if you want
  * more sophisticated error handling.
@@ -19,7 +22,7 @@ public class SimpleAsyncCallback<T> implements AsyncCallback<T>
 		this.success(result);
 		this.done();
 	}
-	
+
 	/** */
 	@Override
 	final public void onFailure(Throwable caught)
@@ -33,13 +36,13 @@ public class SimpleAsyncCallback<T> implements AsyncCallback<T>
 			GWT.log("Caught exception", caught);
 			this.failed(caught);
 		}
-		
+
 		this.done();
 	}
-	
+
 	/** Called when we have succeeded */
 	protected void success(T result) {}
-	
+
 	/** Called when a failure occurs */
 	protected void failed(Throwable caught)
 	{
@@ -47,7 +50,7 @@ public class SimpleAsyncCallback<T> implements AsyncCallback<T>
 		String msg = caught.getLocalizedMessage();
 		Window.alert("Error: " + msg);
 	}
-	
+
 	/** Called after success or error */
 	protected void done() {}
 }
