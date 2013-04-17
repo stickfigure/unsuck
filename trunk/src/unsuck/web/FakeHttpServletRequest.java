@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 /**
  * HttpServletRequest which implements only the attribute-related methods (and not even
  * all of those).  Suitable as a scope for framework bits that need such a thing.
- * 
- * All methods except attribute-related methods will throw NPE.
+ *
+ * All methods except attribute-related methods will either do nothing or return null.
  */
 public class FakeHttpServletRequest extends HttpServletRequestWrapper
 {
@@ -30,13 +30,13 @@ public class FakeHttpServletRequest extends HttpServletRequestWrapper
 					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
 					{
-						throw new UnsupportedOperationException();
+						return null;
 					}
 				});
 	}
-	
+
 	Map<String, Object> attrs = new HashMap<String, Object>();
-	
+
 	public FakeHttpServletRequest()
 	{
 		// Can't actually pass null here
@@ -60,15 +60,10 @@ public class FakeHttpServletRequest extends HttpServletRequestWrapper
 	{
 		attrs.remove(key);
 	}
-	
+
 	@Override
 	public String getRemoteAddr()
 	{
 		return "127.0.0.1";
-	}
-	
-	@Override
-	public String getHeader(String name) {
-		return null;
 	}
 }
