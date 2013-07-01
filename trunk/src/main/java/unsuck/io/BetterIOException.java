@@ -19,4 +19,9 @@ public class BetterIOException extends RuntimeException
 	public BetterIOException(String msg, IOException ex) {
 		super(msg, ex);
 	}
+
+	/** */
+	public BetterIOException(String msg) {
+		super(msg);
+	}
 }
