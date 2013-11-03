@@ -85,9 +85,12 @@ public class StringUtils2
 
 		// Strip out any extra -'s that might get generated
 		String dedup = bld.toString().replaceAll("-+", "-");
-		if (dedup.charAt(dedup.length() - 1) == '-') {
+		
+		// Strip out last '-' if present
+		if (dedup.length() > 0 && dedup.charAt(dedup.length() - 1) == '-') {
 			return dedup.substring(0, dedup.length() - 1);
 		}
+		
 		return dedup;
 	}
 
