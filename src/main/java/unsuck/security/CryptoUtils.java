@@ -51,6 +51,11 @@ public class CryptoUtils
 	}
 
 	/** Masks the annoying exceptions */
+	public static Mac createMacHmacSHA1() {
+		return createMac("HmacSHA1");
+	}
+
+	/** Masks the annoying exceptions */
 	public static Mac createMac(String algorithm) {
 		try {
 			return Mac.getInstance(algorithm);
@@ -64,6 +69,11 @@ public class CryptoUtils
 		return new SecretKeySpec(secret, "HmacSHA256");
 	}
 	
+	/** */
+	public static SecretKey createSecretKeyHmacSHA1(byte[] secret) {
+		return new SecretKeySpec(secret, "HmacSHA1");
+	}
+	
 	/** Create the mac code for a message and secret */
 	public static byte[] macHmacSHA256(String msg, byte[] secret) {
 		Mac mac = CryptoUtils.createMacHmacSHA256();
@@ -74,9 +84,24 @@ public class CryptoUtils
 		return mac.doFinal(StringUtils2.getBytesUTF8(msg));
 	}
 	
+	/** Create the mac code for a message and secret */
+	public static byte[] macHmacSHA1(String msg, byte[] secret) {
+		Mac mac = CryptoUtils.createMacHmacSHA1();
+		
+		try { mac.init(createSecretKeyHmacSHA1(secret)); }
+		catch (InvalidKeyException ex) { throw new RuntimeException(ex); }
+		
+		return mac.doFinal(StringUtils2.getBytesUTF8(msg));
+	}
+	
 	/** Create the mac code for a message and secret, encoding it as hex */
 	public static String macHmacSHA256Hex(String msg, byte[] secret) {
 		return Hex.encodeHexString(macHmacSHA256(msg, secret));
+	}
+	
+	/** Create the mac code for a message and secret, encoding it as hex */
+	public static String macHmacSHA1Hex(String msg, byte[] secret) {
+		return Hex.encodeHexString(macHmacSHA1(msg, secret));
 	}
 	
 	/**
