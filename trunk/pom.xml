@@ -9,7 +9,7 @@
 
 	<groupId>com.voodoodyne.unsuck</groupId>
 	<artifactId>unsuck</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 
 	<name>Unsuck</name>
 	<description>Jeff's library of random crap.</description>
